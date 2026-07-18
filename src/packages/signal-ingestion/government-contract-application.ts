@@ -5,7 +5,11 @@ import {
   type SanitizedCorporateText,
 } from "../privacy-gateway/index.js";
 import type { CompanyEvidenceQuery } from "./company-evidence.js";
-import type { GovernmentContractFixture, IngestionOutcome } from "./index.js";
+import type {
+  GovernmentContractFixture,
+  IngestionOutcome,
+  ReviewQueueQuery,
+} from "./index.js";
 import {
   createCompanyEvidenceQuery,
   createInMemoryRepositories,
@@ -18,6 +22,7 @@ export type GovernmentContractFixtureApplication = {
     fixture: GovernmentContractFixture,
   ): Promise<IngestionOutcome>;
   companyEvidenceQuery: CompanyEvidenceQuery;
+  reviewQueueQuery: ReviewQueueQuery;
   inspectInMemoryPersistence(): {
     companyCount: number;
     sourceCount: number;
@@ -41,6 +46,9 @@ export function createGovernmentContractFixtureApplication(input: {
 
   return {
     companyEvidenceQuery: createCompanyEvidenceQuery(repositories),
+    reviewQueueQuery: {
+      list: async () => repositories.reviewQueue.all(),
+    },
     inspectInMemoryPersistence: () => ({
       companyCount: repositories.companies.all().length,
       sourceCount: repositories.sources.all().length,

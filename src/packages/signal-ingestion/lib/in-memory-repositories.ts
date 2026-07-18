@@ -3,6 +3,8 @@ import type { CompanyEvidenceQuery, CompanyProfile } from "../company-evidence.j
 import type {
   ExternalReference,
   GovernmentContractSignal,
+  ReviewQueueItem,
+  ReviewQueueItemId,
   SignalId,
   Source,
   SourceId,
@@ -82,6 +84,22 @@ export class InMemorySignalRepository {
   }
 }
 
+export class InMemoryReviewQueueRepository {
+  private readonly items = new Map<ReviewQueueItemId, ReviewQueueItem>();
+
+  save(item: ReviewQueueItem): void {
+    this.items.set(item.id, item);
+  }
+
+  all(): ReadonlyArray<ReviewQueueItem> {
+    return [...this.items.values()];
+  }
+
+  count(): number {
+    return this.items.size;
+  }
+}
+
 export function normalizeSourceUrl(sourceUrl: string): string {
   const url = new URL(sourceUrl);
   url.hash = "";
@@ -94,6 +112,7 @@ export type InMemoryRepositories = {
   companies: InMemoryCompanyRepository;
   sources: InMemorySourceRepository;
   signals: InMemorySignalRepository;
+  reviewQueue: InMemoryReviewQueueRepository;
   snapshot(): {
     companies: ReadonlyArray<Company>;
     sources: ReadonlyArray<Source>;
@@ -108,10 +127,12 @@ export function createInMemoryRepositories(
   const sourceRepository = new InMemorySourceRepository();
   const signalRepository = new InMemorySignalRepository();
 
+  const reviewQueueRepository = new InMemoryReviewQueueRepository();
   return {
     companies: companyRepository,
     sources: sourceRepository,
     signals: signalRepository,
+    reviewQueue: reviewQueueRepository,
     snapshot: () => ({
       companies: companyRepository.all(),
       sources: sourceRepository.all(),

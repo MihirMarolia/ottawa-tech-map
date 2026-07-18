@@ -1,8 +1,15 @@
 import type { SanitizedCorporateText } from "../privacy-gateway/index.js";
-import type { CompanyId } from "../entity-resolver/index.js";
+import type {
+  CompanyId,
+  ResolutionCandidate,
+  ReviewReason,
+} from "../entity-resolver/index.js";
 
 export type SignalId = string & { readonly __brand: "SignalId" };
 export type SourceId = string & { readonly __brand: "SourceId" };
+export type ReviewQueueItemId = string & {
+  readonly __brand: "ReviewQueueItemId";
+};
 export type ExternalReference = string & {
   readonly __brand: "ExternalReference";
 };
@@ -25,15 +32,24 @@ export type AcceptedIngestionOutcome = {
   signalId: SignalId;
 };
 
+export type RejectionReason =
+  | "privacy_rejected"
+  | "invalid_source_document"
+  | "invalid_external_reference"
+  | "invalid_source_url"
+  | "source_identity_conflict";
+
 export type IngestionOutcome =
   | AcceptedIngestionOutcome
   | {
       status: "rejected";
-      reason: string;
+      reason: RejectionReason;
     }
   | {
       status: "review_required";
-      reason: string;
+      reviewItemId: ReviewQueueItemId;
+      reason: ReviewReason;
+      candidates: ReadonlyArray<ResolutionCandidate>;
     };
 
 export interface SignalIngestionService {
@@ -56,6 +72,21 @@ export type Source = {
   url: string;
   contentHash: string;
 };
+
+export type ReviewQueueItem = {
+  id: ReviewQueueItemId;
+  reason: ReviewReason;
+  candidates: ReadonlyArray<ResolutionCandidate>;
+  source: {
+    id: SourceId;
+    name: string;
+    url: string;
+  };
+};
+
+export interface ReviewQueueQuery {
+  list(): Promise<ReadonlyArray<ReviewQueueItem>>;
+}
 
 export type GovernmentContractSignal = {
   id: SignalId;

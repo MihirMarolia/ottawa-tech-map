@@ -5,6 +5,7 @@ import type {
   GovernmentContractSignal,
   IngestCorporateSource,
   IngestionOutcome,
+  ReviewQueueItemId,
   SignalId,
   SignalIngestionService,
 } from "../index.js";
@@ -113,9 +114,28 @@ class GovernmentContractSignalIngestionService
       jurisdiction: sourceDocument.jurisdiction,
     });
     if (resolution.status !== "resolved") {
+      const reviewItemId = `review:${command.sourceId}` as ReviewQueueItemId;
+      const reason =
+        resolution.status === "review_required"
+          ? resolution.reason
+          : "low_confidence";
+      const candidates =
+        resolution.status === "review_required" ? resolution.candidates : [];
+      this.repositories.reviewQueue.save({
+        id: reviewItemId,
+        reason,
+        candidates,
+        source: {
+          id: command.sourceId,
+          name: command.sourceName,
+          url: command.sourceUrl,
+        },
+      });
       return {
         status: "review_required",
-        reason: "company_not_resolved",
+        reviewItemId,
+        reason,
+        candidates,
       };
     }
 
