@@ -3,6 +3,9 @@ import type { CompanyId } from "../entity-resolver/index.js";
 
 export type SignalId = string & { readonly __brand: "SignalId" };
 export type SourceId = string & { readonly __brand: "SourceId" };
+export type ExternalReference = string & {
+  readonly __brand: "ExternalReference";
+};
 
 export type IngestCorporateSource = {
   sourceId: SourceId;
@@ -14,12 +17,16 @@ export type IngestCorporateSource = {
 
 export type IngestionOutcomeStatus = "accepted" | "rejected" | "review_required";
 
+export type AcceptedIngestionOutcome = {
+  status: "accepted";
+  disposition: "created" | "already_processed";
+  companyId: CompanyId;
+  sourceId: SourceId;
+  signalId: SignalId;
+};
+
 export type IngestionOutcome =
-  | {
-      status: "accepted";
-      signalId: SignalId;
-      companyId: CompanyId;
-    }
+  | AcceptedIngestionOutcome
   | {
       status: "rejected";
       reason: string;
@@ -59,6 +66,7 @@ export type GovernmentContractSignal = {
   observedAt: string;
   confidence: number;
   schemaVersion: "government-contract-signal/v1";
+  externalReference: ExternalReference;
 };
 
 export type GovernmentContractFixture = {

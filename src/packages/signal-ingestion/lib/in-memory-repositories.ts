@@ -1,6 +1,7 @@
 import type { Company, CompanyId } from "../../entity-resolver/index.js";
 import type { CompanyEvidenceQuery, CompanyProfile } from "../company-evidence.js";
 import type {
+  ExternalReference,
   GovernmentContractSignal,
   SignalId,
   Source,
@@ -30,6 +31,14 @@ export class InMemorySourceRepository {
     return this.sources.get(sourceId);
   }
 
+  findByIdentity(normalizedUrl: string, contentHash: string): Source | undefined {
+    return [...this.sources.values()].find(
+      (source) =>
+        normalizeSourceUrl(source.url) === normalizedUrl &&
+        source.contentHash === contentHash,
+    );
+  }
+
   all(): ReadonlyArray<Source> {
     return [...this.sources.values()];
   }
@@ -42,9 +51,19 @@ export class InMemorySignalRepository {
     this.signals.set(signal.id, signal);
   }
 
-  findBySourceId(sourceId: SourceId): GovernmentContractSignal | undefined {
+  findGovernmentContract(input: {
+    companyId: CompanyId;
+    sourceId: SourceId;
+    observedAt: string;
+    externalReference: ExternalReference;
+  }): GovernmentContractSignal | undefined {
     return [...this.signals.values()].find(
-      (signal) => signal.sourceId === sourceId,
+      (signal) =>
+        signal.companyId === input.companyId &&
+        signal.signalType === "government_contract_awarded" &&
+        signal.sourceId === input.sourceId &&
+        signal.observedAt === input.observedAt &&
+        signal.externalReference === input.externalReference,
     );
   }
 
@@ -61,6 +80,14 @@ export class InMemorySignalRepository {
   all(): ReadonlyArray<GovernmentContractSignal> {
     return [...this.signals.values()];
   }
+}
+
+export function normalizeSourceUrl(sourceUrl: string): string {
+  const url = new URL(sourceUrl);
+  url.hash = "";
+  url.hostname = url.hostname.toLowerCase();
+  url.pathname = url.pathname.replace(/\/$/, "");
+  return url.toString();
 }
 
 export type InMemoryRepositories = {

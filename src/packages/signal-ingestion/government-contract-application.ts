@@ -18,6 +18,11 @@ export type GovernmentContractFixtureApplication = {
     fixture: GovernmentContractFixture,
   ): Promise<IngestionOutcome>;
   companyEvidenceQuery: CompanyEvidenceQuery;
+  inspectInMemoryPersistence(): {
+    companyCount: number;
+    sourceCount: number;
+    signalCount: number;
+  };
 };
 
 export function createGovernmentContractFixtureApplication(input: {
@@ -36,6 +41,11 @@ export function createGovernmentContractFixtureApplication(input: {
 
   return {
     companyEvidenceQuery: createCompanyEvidenceQuery(repositories),
+    inspectInMemoryPersistence: () => ({
+      companyCount: repositories.companies.all().length,
+      sourceCount: repositories.sources.all().length,
+      signalCount: repositories.signals.count(),
+    }),
     async ingestGovernmentContractFixture(fixture) {
       const sanitizationResult = privacyGateway.sanitize({
         rawText: fixture.rawText,

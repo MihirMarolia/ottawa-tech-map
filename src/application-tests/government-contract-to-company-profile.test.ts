@@ -22,8 +22,20 @@ describe("government contract fixture to Company profile Evidence", () => {
     expect(firstOutcome).toMatchObject({
       status: "accepted",
       companyId: existingFixtureCompany.id,
+      sourceId: fictionalGovernmentContractFixture.source.id,
+      disposition: "created",
     });
-    expect(secondOutcome).toEqual(firstOutcome);
+    expect(secondOutcome).toMatchObject({
+      status: "accepted",
+      companyId: existingFixtureCompany.id,
+      sourceId: fictionalGovernmentContractFixture.source.id,
+      disposition: "already_processed",
+    });
+    expect(secondOutcome.status === "accepted" && firstOutcome.status === "accepted"
+      ? secondOutcome.signalId
+      : null).toBe(
+      firstOutcome.status === "accepted" ? firstOutcome.signalId : null,
+    );
 
     const companyProfile = await application.companyEvidenceQuery.findCompanyProfile(
       existingFixtureCompany.id,
