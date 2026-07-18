@@ -31,3 +31,20 @@ describe("score evidence contract", () => {
     >();
   });
 });
+
+describe("Signal provenance contract", () => {
+  it("requires Source provenance without raw text persistence", () => {
+    type Signal = import("../packages/signal-ingestion/index.js").GovernmentContractSignal;
+    type Source = import("../packages/signal-ingestion/index.js").Source;
+    type SourceId = import("../packages/signal-ingestion/index.js").SourceId;
+
+    expectTypeOf<Signal["sourceId"]>().toEqualTypeOf<SourceId>();
+    expectTypeOf<Signal>().toHaveProperty("observedAt");
+    expectTypeOf<Signal>().toHaveProperty("confidence");
+    expectTypeOf<Signal>().toHaveProperty("schemaVersion");
+    expectTypeOf<"rawText">().not.toMatchTypeOf<keyof Signal | keyof Source>();
+    expectTypeOf<"sanitizedText">().not.toMatchTypeOf<
+      keyof Signal | keyof Source
+    >();
+  });
+});

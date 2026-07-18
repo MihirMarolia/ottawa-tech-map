@@ -1,9 +1,11 @@
 import type {
   CompanyReference,
+  Company,
   CompanyId,
   EntityResolutionResult,
   EntityResolver,
 } from "../index.js";
+import { createExactCanonicalDomainEntityResolver } from "../index.js";
 
 describe("EntityResolver contract", () => {
   it("accepts the public interface shape", () => {
@@ -19,5 +21,28 @@ describe("EntityResolver contract", () => {
     };
 
     expect(resolver.resolve).toBeDefined();
+  });
+
+  it("resolves an exact canonical-domain match", async () => {
+    const company: Company = {
+      id: "company:northstar-civic" as CompanyId,
+      canonicalName: "Northstar Civic Systems",
+      canonicalDomain: "northstar-civic.example",
+      jurisdiction: "CA-ON",
+    };
+    const resolver = createExactCanonicalDomainEntityResolver([company]);
+
+    await expect(
+      resolver.resolve({
+        observedName: company.canonicalName,
+        observedDomain: company.canonicalDomain,
+        jurisdiction: company.jurisdiction,
+      }),
+    ).resolves.toEqual({
+      status: "resolved",
+      companyId: company.id,
+      resolutionMethod: "canonical_domain",
+      confidence: 1,
+    });
   });
 });

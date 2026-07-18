@@ -18,3 +18,5 @@ export interface PrivacyGateway {
   sanitize(input: CorporateSourceInput): SanitizationResult;
   assertSafe(result: SanitizationResult): SanitizedCorporateText;
 }
+
+export { createPrivacyGateway } from "./lib/privacy-gateway.js";

@@ -1,5 +1,12 @@
 export type CompanyId = string & { readonly __brand: "CompanyId" };
 
+export type Company = {
+  id: CompanyId;
+  canonicalName: string;
+  canonicalDomain: string;
+  jurisdiction: string;
+};
+
 export type CompanyReference = {
   observedName: string;
   observedDomain: string;
@@ -43,3 +50,5 @@ export type EntityResolutionResult =
 export interface EntityResolver {
   resolve(input: CompanyReference): Promise<EntityResolutionResult>;
 }
+
+export { createExactCanonicalDomainEntityResolver } from "./lib/exact-canonical-domain-entity-resolver.js";
