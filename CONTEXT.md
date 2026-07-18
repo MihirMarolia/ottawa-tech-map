@@ -21,8 +21,11 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 - [Decisions](docs/architecture/decisions/) — ADRs.
 
 ## Features
-- [Government contract fixture → Company evidence](docs/features/government-contract-fixture-to-company-evidence.md) — first tracer-bullet feature (in progress).
+- [Government contract fixture → Company evidence](docs/features/government-contract-fixture-to-company-evidence.md) — first tracer-bullet feature, completed in milestone 0001.
 - [Completed feature specs](docs/features/) — written when a feature ships.
+
+## Milestones
+- [Government contract evidence](docs/milestones/0001-government-contract-evidence.md) — proven ingestion, idempotency, evidence, review outcomes, and current persistence limitation.
 
 ## Agents
 - [Agent skills config](docs/agents/) — issue tracker, triage labels, domain-doc rules.
