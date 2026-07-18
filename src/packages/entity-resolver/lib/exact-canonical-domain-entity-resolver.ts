@@ -24,6 +24,21 @@ class ExactCanonicalDomainEntityResolver implements EntityResolver {
       };
     }
 
+    if (company.canonicalName !== input.observedName) {
+      return {
+        status: "review_required",
+        reason: "conflicting_evidence",
+        candidates: [
+          {
+            companyId: company.id,
+            observedName: company.canonicalName,
+            observedDomain: company.canonicalDomain,
+            confidence: 1,
+          },
+        ],
+      };
+    }
+
     return {
       status: "resolved",
       companyId: company.id,

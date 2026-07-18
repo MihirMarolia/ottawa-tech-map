@@ -63,6 +63,13 @@ Government-contract Signal carries a schema version. Observation date, contract 
 
 `IngestionOutcome` reports `accepted`, `rejected`, or `review_required` with a reason code.
 
+### Current idempotency guarantee
+
+The in-memory repositories prove deterministic sequential replay semantics for
+the fixture. They are not concurrency-safe production persistence: a future
+database implementation must enforce Source and Signal identities with unique
+constraints and atomic upserts. Distributed locking is intentionally deferred.
+
 ## Testing Decisions
 
 - Interface-first TDD through public module entry points only.

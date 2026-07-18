@@ -23,6 +23,19 @@ function escapeHtml(value: string): string {
     .replaceAll("'", "&#039;");
 }
 
+type ReviewQueueView = ReadonlyArray<{
+  reason: "conflicting_evidence" | "low_confidence";
+  source: {
+    name: string;
+    url: string;
+  };
+  candidates: ReadonlyArray<{
+    observedName: string;
+    observedDomain: string;
+    confidence: number;
+  }>;
+}>;
+
 function presentContractType(contractType: "professional_services"): string {
   return contractType === "professional_services"
     ? "Professional services"
@@ -58,4 +71,24 @@ export function renderCompanyProfile(profile: CompanyProfileView): string {
     </main>
   </body>
 </html>`;
+}
+
+export function renderReviewQueue(items: ReviewQueueView): string {
+  const entries = items
+    .map((item) => {
+      const reason =
+        item.reason === "conflicting_evidence"
+          ? "Conflicting evidence"
+          : "Low confidence";
+      const candidates = item.candidates
+        .map(
+          (candidate) =>
+            `<li>${escapeHtml(candidate.observedName)} (${escapeHtml(candidate.observedDomain)}) — ${Math.round(candidate.confidence * 100)}%</li>`,
+        )
+        .join("");
+      return `<article><h2>${reason}</h2><p>Source: <a href="${escapeHtml(item.source.url)}">${escapeHtml(item.source.name)}</a></p><ul>${candidates}</ul></article>`;
+    })
+    .join("");
+
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Review Queue</title></head><body><main><h1>Review Queue</h1>${entries}</main></body></html>`;
 }

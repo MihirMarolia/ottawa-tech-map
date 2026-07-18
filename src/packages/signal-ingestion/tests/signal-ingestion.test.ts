@@ -15,6 +15,8 @@ describe("SignalIngestionService contract", () => {
         status: "accepted",
         signalId: "signal-1" as SignalId,
         companyId: "company-1" as CompanyId,
+        sourceId: "source-1" as import("../index.js").SourceId,
+        disposition: "created",
       }),
     };
 

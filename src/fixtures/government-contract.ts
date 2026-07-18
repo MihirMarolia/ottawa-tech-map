@@ -20,6 +20,7 @@ const privacySafeSourceDocument = JSON.stringify({
   observedAt: "2026-06-30",
   confidence: 0.98,
   schemaVersion: "government-contract-signal/v1",
+  externalReference: "contract-2026-001",
 });
 
 export const fictionalGovernmentContractFixture: GovernmentContractFixture = {
