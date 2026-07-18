@@ -16,10 +16,12 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 ## Architecture
 - [System context](docs/architecture/system-context.md) — the high-level shape.
 - [Ingestion pipeline](docs/architecture/ingestion-pipeline.md) — collectors → validators → enrichers → agent actions → approval → apply.
+- [Deep modules](docs/architecture/deep-modules.md) — Privacy Gateway, Entity Resolver, Signal Ingestion, Intelligence Scoring, Institutional CSV Import.
 - [Frontend boundary](docs/architecture/frontend-boundary.md) — what the web app may and may not do.
 - [Decisions](docs/architecture/decisions/) — ADRs.
 
 ## Features
+- [Government contract fixture → Company evidence](docs/features/government-contract-fixture-to-company-evidence.md) — first tracer-bullet feature (in progress).
 - [Completed feature specs](docs/features/) — written when a feature ships.
 
 ## Agents

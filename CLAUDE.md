@@ -19,4 +19,32 @@ Five canonical roles using default label strings (`needs-triage`, `needs-info`, 
 
 ### Domain docs
 
-Single-context layout — `CONTEXT.md` at the repo root, ADRs under `docs/adr/`. See `docs/agents/domain.md`.
+Single-context layout — `CONTEXT.md` at the repo root, ADRs under `docs/architecture/decisions/`. See `docs/agents/domain.md`.
+
+### Deep modules
+
+Five deep modules hide core complexity — see `docs/architecture/deep-modules.md` and `src/packages/README.md` before adding or importing a package.
+
+### Implementation
+
+Tracer-bullet tickets use the brief in `docs/agents/implementation-brief.md`.
+
+## Definition of Done
+
+A ticket is not complete unless:
+
+- every acceptance criterion has a corresponding test or explicit verification
+- targeted tests pass
+- complete test suite passes
+- TypeScript strict typecheck passes
+- production build passes
+- no dependency version changed
+- no new use of `any` exists
+- no unresolved TODO was introduced
+- no raw or personal source content appears in logs, fixtures, or snapshots
+- all new domain concepts appear in the ubiquitous language
+- all intelligence outputs retain evidence provenance
+- the feature can be demonstrated through its intended entry point
+- changed files and deviations are reported
+
+Do not accept "implemented successfully" as evidence.
