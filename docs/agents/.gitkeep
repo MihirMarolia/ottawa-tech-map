@@ -1,0 +1,9 @@
+# Agents
+
+Generated agent-skills configuration lives here. This file is the index; the actual configuration is written by `/setup-matt-pocock-skills` into:
+
+- `docs/agents/issue-tracker.md` — where issues live (GitHub by default).
+- `docs/agents/triage-labels.md` — the five canonical triage roles and their label strings.
+- `docs/agents/domain.md` — how the skills consume `CONTEXT.md` and `docs/adr/`.
+
+Re-run `/setup-matt-pocock-skills` to switch issue trackers or restart from scratch. Edit the files directly for any other change.

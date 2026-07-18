@@ -1,0 +1,13 @@
+# Features
+
+Completed feature specifications live here. Each file is one feature, named `<feature-slug>.md`.
+
+A completed spec describes:
+
+- The user-visible behavior.
+- The schema changes (with migration IDs).
+- The pipeline stages involved.
+- The search query pattern it enables.
+- The acceptance criteria.
+
+Specs are written when a feature ships, not before. Pre-feature design lives in `docs/architecture/decisions/` and `docs/domain/`.
