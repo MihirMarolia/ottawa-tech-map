@@ -3,12 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "tsc --project tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "lint:boundaries": "depcruise src",
     "test": "vitest run",
-    "check": "npm run typecheck && npm run lint:boundaries && npm run test"
+    "check": "npm run typecheck && npm run lint:boundaries && npm run test && npm run build"
   },
   "devDependencies": {
+    "@types/node": "^26.1.1",
     "dependency-cruiser": "^16.10.1",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"

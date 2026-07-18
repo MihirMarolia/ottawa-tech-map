@@ -70,7 +70,7 @@ module.exports = {
       to: { circular: true },
     },
     {
-      name: "web-cannot-import-privileged-modules",
+      name: "forbidden-web-to-ingestion-import",
       comment:
         "The web app is a read surface only — it must not import ingestion, intelligence-service, or privileged database modules.",
       severity: "error",

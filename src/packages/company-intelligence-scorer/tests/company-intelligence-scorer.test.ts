@@ -2,9 +2,9 @@ import type {
   CompanyEvidenceSet,
   CompanyIntelligenceScorer,
   ExplainableCompanyScore,
-  SignalId,
 } from "../index.js";
 import type { CompanyId } from "../../entity-resolver/index.js";
+import type { SignalId } from "../../signal-ingestion/index.js";
 
 describe("CompanyIntelligenceScorer contract", () => {
   it("accepts the public interface shape", () => {
