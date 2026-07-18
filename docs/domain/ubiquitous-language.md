@@ -1,38 +1,124 @@
 # Ubiquitous Language
 
-The shared vocabulary used across code, docs, issues, and conversation. Use these terms exactly; do not drift to synonyms.
+## Company
 
-## Core nouns
+A canonical corporate entity being tracked by the system.
 
-- **Signal** — a raw observation from an external source (a news mention, a job posting, a tweet, a filing). Signals are immutable once written.
-- **Entity** — a real-world thing the map cares about: a **Company**, **Person**, **Product**, or **Location**. Entities have stable IDs and resolve across multiple signals.
-- **Proposal** — a structured suggestion to create or update a field on an Entity, produced by an enricher. Never applied directly.
-- **Audit entry** — the persisted record of a proposal being made, evaluated, and either approved or rejected. Every agent-driven change has one.
-- **Approval** — the gate (human or automated) between a proposal and a production write.
-- **Apply** — the only path that mutates production data. Runs after approval.
+A Company is not identified solely by its display name. Identity may be
+supported by canonical domain, business identifiers, aliases, jurisdiction,
+and reviewed evidence.
 
-## Pipeline stages
+Do not call it:
+- startup record
+- vendor row
+- organization item
+- business object
 
-```
-collectors → validators → enrichers → agent actions → approval → apply
-   (raw)      (confidence)  (proposals)   (audit log)   (human/auto)
-```
+## Source
 
-- **Collector** — ingests raw signals from external sources.
-- **Validator** — assigns a confidence score to a signal; flags anomalies.
-- **Enricher** — proposes field updates from validated signals; never writes directly.
-- **Agent action** — logs proposals to the audit trail.
-- **Approval** — human or automated gate before any production write.
-- **Apply** — persists approved changes only.
+A retrievable external origin from which corporate evidence was observed.
 
-## Properties
+Examples:
+- procurement notice
+- company website
+- funding announcement
+- job posting
+- institutional CSV export
 
-- **Confidence** — a number attached to a signal or proposal by a validator, used by the approval gate.
-- **Provenance** — the upstream source of a signal, preserved end-to-end so any rendered pin can be traced back.
-- **Search readiness** — a schema property: a record is searchable when it has indexed text fields, typed attributes, and a documented query pattern.
+A Source is metadata about provenance. It is not the extracted claim.
 
-## Roles
+## Source Document
 
-- **Maintainer** — evaluates `needs-triage` issues.
-- **Reporter** — supplies information for `needs-info` issues.
-- **AFK agent** — implements `ready-for-agent` issues without interactive human input.
+A privacy-sanitized representation of source material eligible for processing.
+
+Raw unsanitized source content must not be persisted as a Source Document.
+
+## Signal
+
+A time-bound, source-backed observation about one or more Companies.
+
+Examples:
+- government contract awarded
+- non-dilutive funding received
+- job posting observed
+- technology adoption observed
+- operating-status change reported
+
+A Signal is evidence, not a final conclusion.
+
+## Company Fact
+
+A current normalized attribute inferred or verified from one or more Signals.
+
+Examples:
+- primary sector
+- operating status
+- employee range
+- active government vendor status
+
+A Company Fact must retain evidence lineage.
+
+## Evidence
+
+The provenance and structured support for a Signal or Company Fact.
+
+Evidence includes:
+- source
+- observation date
+- extraction method
+- confidence
+- review status
+
+## Entity Resolution
+
+The process of determining whether an incoming organization reference belongs
+to an existing Company or should create a new Company.
+
+Ambiguous matches must enter the Review Queue.
+
+## Review Queue
+
+A human-decision surface for ambiguous, conflicting, low-confidence, or
+privacy-rejected records.
+
+The Review Queue is not an error log.
+
+## Government Intent
+
+Source-backed evidence that a public institution is actively considering,
+buying, contracting with, or qualifying a Company.
+
+Government Intent is broader than awarded contract value.
+
+## Capital Efficiency
+
+Evidence that a Company has generated operating maturity, commercial traction,
+or institutional demand relative to its disclosed equity capital and team size.
+
+Capital Efficiency is not calculated from funding alone.
+
+## CEGI Score
+
+Capital Efficiency and Government Intent score.
+
+An explainable, versioned ranking signal derived from evidence-backed
+components and penalties.
+
+The CEGI Score is not a prediction of company success.
+
+## Ingestion Run
+
+One idempotent execution that reads one or more Sources and produces accepted,
+rejected, or review-required records.
+
+## Ecosystem Dependency
+
+A material corporate reliance on a platform, vendor network, public institution,
+research institution, supply chain, or commercial ecosystem.
+
+## Founder Lineage
+
+Institutional experience associated with company leadership, represented only
+as an approved organization-level category.
+
+Do not store individual biographies or personal profiles.

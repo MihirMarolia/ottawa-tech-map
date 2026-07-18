@@ -2,6 +2,11 @@
 
 Instructions for Claude Code when working in this repository.
 
+## Terminology
+
+Use the exact terminology in `docs/domain/ubiquitous-language.md`.
+Do not introduce synonyms for defined domain concepts.
+
 ## Agent skills
 
 ### Issue tracker
