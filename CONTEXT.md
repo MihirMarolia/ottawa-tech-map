@@ -27,6 +27,7 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 
 ## Milestones
 - [Government contract evidence](docs/milestones/0001-government-contract-evidence.md) — proven ingestion, idempotency, evidence, review outcomes, and current persistence limitation.
+- [Durable intelligence persistence](docs/milestones/0002-durable-intelligence-persistence.md) — reproducible PostgreSQL persistence, atomic concurrent idempotency, review history, audit, and access boundaries.
 
 ## Agents
 - [Agent skills config](docs/agents/) — issue tracker, triage labels, domain-doc rules.
