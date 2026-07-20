@@ -110,10 +110,32 @@ create table public.ingestion_run_items (
 create index ingestion_run_items_run_idx on public.ingestion_run_items (ingestion_run_id, outcome);
 create index ingestion_run_items_correlation_idx on public.ingestion_run_items (correlation_id);
 
+create or replace function public.government_contract_fingerprint_input(
+  candidate_normalized_url text,
+  candidate_content_hash text,
+  candidate_observed_date date,
+  candidate_external_reference text,
+  candidate_signal_discriminator text
+)
+returns text
+language sql
+immutable
+set search_path = ''
+as $$
+  select format(
+    '{"externalReference":%s,"observedDate":%s,"signalDiscriminator":%s,"signalType":"government_contract_awarded","sourceIdentity":%s}',
+    coalesce(to_jsonb(candidate_external_reference)::text, 'null'),
+    to_jsonb(candidate_observed_date::text)::text,
+    to_jsonb(candidate_signal_discriminator)::text,
+    to_jsonb(candidate_normalized_url || '|' || candidate_content_hash)::text
+  );
+$$;
+
 create or replace function public.validate_signal_payload(
   candidate_signal_type text,
   candidate_schema_version text,
-  candidate_payload jsonb
+  candidate_payload jsonb,
+  candidate_observed_date date
 )
 returns boolean
 language sql
@@ -128,7 +150,7 @@ as $$
         jsonb_typeof(candidate_payload -> 'contractType') = 'string'
         and candidate_payload ->> 'contractType' = 'professional_services'
         and jsonb_typeof(candidate_payload -> 'observedAt') = 'string'
-        and (candidate_payload ->> 'observedAt') ~ '^\d{4}-\d{2}-\d{2}$'
+        and candidate_payload ->> 'observedAt' = candidate_observed_date::text
     else false
   end;
 $$;
@@ -138,7 +160,10 @@ create table public.signals (
   source_id uuid not null references public.sources(id) on delete restrict,
   signal_type text not null check (btrim(signal_type) <> ''),
   observed_date date not null,
-  external_reference text,
+  external_reference text check (
+    external_reference is null
+    or (external_reference = btrim(external_reference) and external_reference <> '')
+  ),
   signal_discriminator text not null check (btrim(signal_discriminator) <> ''),
   signal_fingerprint_version integer not null check (signal_fingerprint_version > 0),
   fingerprint_canonical_input text not null check (fingerprint_canonical_input <> ''),
@@ -149,7 +174,7 @@ create table public.signals (
   created_at timestamptz not null default now(),
   unique (signal_fingerprint_version, signal_fingerprint),
   check (signal_fingerprint = encode(extensions.digest(convert_to(fingerprint_canonical_input, 'UTF8'), 'sha256'), 'hex')),
-  check (public.validate_signal_payload(signal_type, schema_version, structured_payload))
+  check (public.validate_signal_payload(signal_type, schema_version, structured_payload, observed_date))
 );
 
 create index signals_identity_idx on public.signals (signal_fingerprint_version, signal_fingerprint);
@@ -196,6 +221,7 @@ create table public.review_queue_candidates (
   snapshot_explanation text,
   created_at timestamptz not null default now(),
   unique (review_queue_item_id, candidate_rank),
+  unique (review_queue_item_id, id),
   unique nulls not distinct (review_queue_item_id, company_id)
 );
 
@@ -203,14 +229,19 @@ create table public.review_decisions (
   id uuid primary key default gen_random_uuid(),
   review_queue_item_id uuid not null references public.review_queue_items(id) on delete restrict,
   decision_type public.review_decision_type not null,
-  selected_candidate_id uuid references public.review_queue_candidates(id) on delete restrict,
+  selected_candidate_id uuid,
   actor_type public.audit_actor_type not null,
   actor_identifier text not null check (btrim(actor_identifier) <> ''),
   rationale_code text not null check (btrim(rationale_code) <> ''),
   rationale_note text,
-  supersedes_decision_id uuid references public.review_decisions(id) on delete restrict,
+  supersedes_decision_id uuid,
   created_at timestamptz not null default now(),
-  check ((decision_type = 'candidate_selected' and selected_candidate_id is not null) or decision_type <> 'candidate_selected'),
+  unique (review_queue_item_id, id),
+  foreign key (review_queue_item_id, selected_candidate_id)
+    references public.review_queue_candidates(review_queue_item_id, id) on delete restrict,
+  foreign key (review_queue_item_id, supersedes_decision_id)
+    references public.review_decisions(review_queue_item_id, id) on delete restrict,
+  check ((decision_type = 'candidate_selected') = (selected_candidate_id is not null)),
   check (supersedes_decision_id is null or supersedes_decision_id <> id)
 );
 
@@ -398,6 +429,16 @@ declare
   signal_was_created boolean;
   resolved_outcome public.ingestion_item_outcome;
 begin
+  if candidate_fingerprint_canonical_input <> public.government_contract_fingerprint_input(
+    candidate_normalized_url,
+    candidate_content_hash,
+    candidate_observed_date,
+    candidate_external_reference,
+    candidate_signal_discriminator
+  ) then
+    raise exception 'Signal fingerprint canonical input does not match identity fields'
+      using errcode = '23514';
+  end if;
   if not exists (
     select 1 from public.companies
     where id = candidate_company_id and status = 'active'
