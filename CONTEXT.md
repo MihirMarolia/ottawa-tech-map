@@ -21,6 +21,7 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 - [Decisions](docs/architecture/decisions/) — ADRs.
 
 ## Features
+- [Durable intelligence persistence](docs/features/durable-intelligence-persistence.md) — Supabase schema, identity, transaction, concurrency, RLS, review, and audit contracts.
 - [Government contract fixture → Company evidence](docs/features/government-contract-fixture-to-company-evidence.md) — first tracer-bullet feature, completed in milestone 0001.
 - [Completed feature specs](docs/features/) — written when a feature ships.
 
@@ -35,3 +36,6 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 
 ## Engineering constitution
 - [ENGINEERING.md](docs/ENGINEERING.md) — the seven principles every change is reviewed against.
+
+## Engineering workflows
+- [Local Supabase verification](docs/engineering/local-supabase.md) — reproducible migration, constraint, access-boundary, and concurrency testing.
