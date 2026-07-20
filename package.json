@@ -4,6 +4,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
+    "db:start": "npx --yes supabase@2.109.1 start",
+    "db:reset": "npx --yes supabase@2.109.1 db reset",
+    "db:test:schema": "npx --yes supabase@2.109.1 test db",
+    "db:test:concurrency": "node scripts/db-concurrency-test.mjs",
+    "db:verify": "npm run db:reset && npm run db:test:schema && npm run db:test:concurrency && npm run db:reset && npm run db:test:schema",
     "typecheck": "tsc --noEmit",
     "lint:boundaries": "depcruise src",
     "test": "vitest run",
