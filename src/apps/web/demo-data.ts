@@ -1,0 +1,73 @@
+import type { DirectoryCompany } from "./directory.js";
+
+const publicCompanies: ReadonlyArray<DirectoryCompany> = [
+  ["shopify", "Shopify", "shopify.com", "Commerce software", "Commerce infrastructure platform", "Shopify", "https://www.shopify.com/investors/investor-faqs"],
+  ["kinaxis", "Kinaxis", "kinaxis.com", "Supply chain software", "Supply chain orchestration platform", "Kinaxis", "https://kinaxis.com/en/about"],
+  ["calian", "Calian", "calian.com", "Mission-critical technology and services", "Mission-critical solutions for regulated sectors", "Calian", "https://www.calian.com/about-calian/"],
+  ["solace", "Solace", "solace.com", "Data infrastructure", "Real-time event-driven data platform", "Solace", "https://solace.com/company/"],
+  ["fullscript", "Fullscript", "fullscript.com", "Health technology", "Care delivery platform for whole-person medicine", "Fullscript", "https://fullscript.com/about"],
+  ["assent", "Assent", "assent.com", "Supply chain compliance software", "Supply chain sustainability and compliance platform", "Assent", "https://www.assent.com/company/our-story/"],
+  ["rewind", "Rewind", "rewind.com", "Data protection software", "Backup and recovery for SaaS and cloud data", "Rewind", "https://rewind.com/about-us/"],
+  ["field-effect", "Field Effect", "fieldeffect.com", "Cybersecurity", "Managed cybersecurity and cyber training solutions", "Field Effect", "https://fieldeffect.com/resources/case-study/ictc"],
+  ["mindbridge", "MindBridge", "mindbridge.ai", "Financial technology", "AI platform for financial oversight and audit risk", "MindBridge", "https://www.mindbridge.ai/company/"],
+  ["ranovus", "RANOVUS", "ranovus.com", "Photonics and hardware", "Photonics interconnect solutions for data infrastructure", "RANOVUS", "https://ranovus.com/contact-us/"],
+].map(([slug, canonicalName, canonicalDomain, sector, shortDescription, sourceName, sourceUrl]) => ({
+  slug,
+  canonicalName,
+  canonicalDomain,
+  location: "Ottawa, Ontario",
+  sector,
+  employeeBand: null,
+  operatingStatus: "active" as const,
+  shortDescription,
+  lastVerifiedDate: "2026-08-05",
+  profileSource: { name: sourceName, url: sourceUrl },
+  evidence: [],
+}));
+
+const fictionalCompany: DirectoryCompany = {
+  slug: "northstar-civic-systems",
+  canonicalName: "Northstar Civic Systems",
+  canonicalDomain: "northstar-civic.example",
+  location: "Ottawa, Ontario",
+  sector: "GovTech",
+  employeeBand: "11–50",
+  operatingStatus: "active",
+  shortDescription: "Fictional Company used to prove contract and hiring Evidence end to end.",
+  lastVerifiedDate: "2026-08-05",
+  profileSource: {
+    name: "Fictional Ottawa intelligence fixture",
+    url: "https://northstar-civic.example/about",
+  },
+  evidence: [
+    {
+      kind: "government_contract",
+      observedAt: "2026-06-30",
+      confidence: 0.98,
+      sourceName: "Canadian Public Procurement Fixture",
+      sourceUrl: "https://contracts.example/notices/contract-2026-001",
+      awardingOrganization: "Fictional Canadian public institution",
+      contractType: "Professional services",
+      externalReference: "contract-2026-001",
+      fixture: true,
+    },
+    {
+      kind: "job_posting",
+      observedAt: "2026-08-05",
+      confidence: 0.97,
+      sourceName: "Northstar Civic Systems careers fixture",
+      sourceUrl: "https://careers.northstar-civic.example/jobs/platform-security-engineer",
+      jobTitle: "Platform Security Engineer",
+      location: "Ottawa, Ontario",
+      technologies: ["TypeScript", "PostgreSQL"],
+      securityClearanceRequired: true,
+      bilingualRequired: false,
+      fixture: true,
+    },
+  ],
+};
+
+export const ottawaDemoDirectory: ReadonlyArray<DirectoryCompany> = [
+  fictionalCompany,
+  ...publicCompanies,
+];

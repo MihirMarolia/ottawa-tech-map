@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
+    "demo": "npm run build && node dist/apps/demo-server/index.js",
     "db:start": "npx --yes supabase@2.109.1 start",
     "db:reset": "npx --yes supabase@2.109.1 db reset",
     "db:test:schema": "npx --yes supabase@2.109.1 test db",
