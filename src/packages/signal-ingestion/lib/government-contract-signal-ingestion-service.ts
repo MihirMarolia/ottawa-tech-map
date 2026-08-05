@@ -1,13 +1,15 @@
 import { createHash } from "node:crypto";
-import type { EntityResolver } from "../../entity-resolver/index.js";
+import type { CompanyId, EntityResolver } from "../../entity-resolver/index.js";
 import type {
   ExternalReference,
   GovernmentContractSignal,
   IngestCorporateSource,
   IngestionOutcome,
+  ReviewQueueItem,
   ReviewQueueItemId,
   SignalId,
   SignalIngestionService,
+  Source,
 } from "../index.js";
 import type { InMemoryRepositories } from "./in-memory-repositories.js";
 import { normalizeSourceUrl } from "./in-memory-repositories.js";
@@ -22,6 +24,24 @@ type GovernmentContractSourceDocument = {
   schemaVersion: "government-contract-signal/v1";
   externalReference: ExternalReference;
 };
+
+export type GovernmentContractPersistenceInput = {
+  companyId: CompanyId;
+  callerSourceId: Source["id"];
+  source: Omit<Source, "id">;
+  normalizedSourceUrl: string;
+  sourceDocument: GovernmentContractSourceDocument;
+};
+
+export interface GovernmentContractAcceptedPersistence {
+  persist(
+    input: GovernmentContractPersistenceInput,
+  ): Promise<IngestionOutcome>;
+}
+
+export interface GovernmentContractReviewQueue {
+  save(item: ReviewQueueItem): void;
+}
 
 type SourceDocumentParseResult =
   | { status: "valid"; sourceDocument: GovernmentContractSourceDocument }
@@ -95,7 +115,8 @@ class GovernmentContractSignalIngestionService
 {
   constructor(
     private readonly entityResolver: EntityResolver,
-    private readonly repositories: InMemoryRepositories,
+    private readonly acceptedPersistence: GovernmentContractAcceptedPersistence,
+    private readonly reviewQueue: GovernmentContractReviewQueue,
   ) {}
 
   async ingest(command: IngestCorporateSource): Promise<IngestionOutcome> {
@@ -121,7 +142,7 @@ class GovernmentContractSignalIngestionService
           : "low_confidence";
       const candidates =
         resolution.status === "review_required" ? resolution.candidates : [];
-      this.repositories.reviewQueue.save({
+      this.reviewQueue.save({
         id: reviewItemId,
         reason,
         candidates,
@@ -148,73 +169,97 @@ class GovernmentContractSignalIngestionService
     } catch {
       return { status: "rejected", reason: "invalid_source_url" };
     }
-    const existingSource = this.repositories.sources.findByIdentity(
-      normalizedUrl,
-      contentHash,
-    );
-    const sourceId = existingSource?.id ?? command.sourceId;
-    if (
-      existingSource === undefined &&
-      this.repositories.sources.findById(command.sourceId) !== undefined
-    ) {
-      return { status: "rejected", reason: "source_identity_conflict" };
-    }
-    const existingSignal = this.repositories.signals.findGovernmentContract({
-      companyId: resolution.companyId,
-      sourceId,
-      observedAt: sourceDocument.observedAt,
-      externalReference: sourceDocument.externalReference,
-    });
-    if (existingSignal !== undefined) {
-      return {
-        status: "accepted",
-        signalId: existingSignal.id,
-        companyId: existingSignal.companyId,
-        sourceId: existingSignal.sourceId,
-        disposition: "already_processed",
-      };
-    }
 
-    const signalId =
-      `signal:${sourceId}:${sourceDocument.externalReference}` as SignalId;
-    const signal: GovernmentContractSignal = {
-      id: signalId,
-      sourceId,
+    return this.acceptedPersistence.persist({
       companyId: resolution.companyId,
-      signalType: "government_contract_awarded",
-      contractType: sourceDocument.contractType,
-      observedAt: sourceDocument.observedAt,
-      confidence: sourceDocument.confidence,
-      schemaVersion: sourceDocument.schemaVersion,
-      externalReference: sourceDocument.externalReference,
-    };
-
-    if (existingSource === undefined) {
-      this.repositories.sources.save({
-        id: sourceId,
+      callerSourceId: command.sourceId,
+      source: {
         name: command.sourceName,
         url: command.sourceUrl,
         contentHash,
-      });
-    }
-    this.repositories.signals.save(signal);
-
-    return {
-      status: "accepted",
-      signalId,
-      companyId: resolution.companyId,
-      sourceId,
-      disposition: "created",
-    };
+      },
+      normalizedSourceUrl: normalizedUrl,
+      sourceDocument,
+    });
   }
+}
+
+export function createGovernmentContractSignalIngestionServiceWithPersistence(
+  entityResolver: EntityResolver,
+  acceptedPersistence: GovernmentContractAcceptedPersistence,
+  reviewQueue: GovernmentContractReviewQueue,
+): SignalIngestionService {
+  return new GovernmentContractSignalIngestionService(
+    entityResolver,
+    acceptedPersistence,
+    reviewQueue,
+  );
 }
 
 export function createGovernmentContractSignalIngestionService(
   entityResolver: EntityResolver,
   repositories: InMemoryRepositories,
 ): SignalIngestionService {
-  return new GovernmentContractSignalIngestionService(
+  const acceptedPersistence: GovernmentContractAcceptedPersistence = {
+    async persist(input) {
+      const existingSource = repositories.sources.findByIdentity(
+        input.normalizedSourceUrl,
+        input.source.contentHash,
+      );
+      const sourceId = existingSource?.id ?? input.callerSourceId;
+      if (
+        existingSource === undefined &&
+        repositories.sources.findById(input.callerSourceId) !== undefined
+      ) {
+        return { status: "rejected", reason: "source_identity_conflict" };
+      }
+      const existingSignal = repositories.signals.findGovernmentContract({
+        companyId: input.companyId,
+        sourceId,
+        observedAt: input.sourceDocument.observedAt,
+        externalReference: input.sourceDocument.externalReference,
+      });
+      if (existingSignal !== undefined) {
+        return {
+          status: "accepted",
+          signalId: existingSignal.id,
+          companyId: existingSignal.companyId,
+          sourceId: existingSignal.sourceId,
+          disposition: "already_processed",
+        };
+      }
+
+      const signalId =
+        `signal:${sourceId}:${input.sourceDocument.externalReference}` as SignalId;
+      const signal: GovernmentContractSignal = {
+        id: signalId,
+        sourceId,
+        companyId: input.companyId,
+        signalType: "government_contract_awarded",
+        contractType: input.sourceDocument.contractType,
+        observedAt: input.sourceDocument.observedAt,
+        confidence: input.sourceDocument.confidence,
+        schemaVersion: input.sourceDocument.schemaVersion,
+        externalReference: input.sourceDocument.externalReference,
+      };
+
+      if (existingSource === undefined) {
+        repositories.sources.save({ id: sourceId, ...input.source });
+      }
+      repositories.signals.save(signal);
+      return {
+        status: "accepted",
+        signalId,
+        companyId: input.companyId,
+        sourceId,
+        disposition: "created",
+      };
+    },
+  };
+
+  return createGovernmentContractSignalIngestionServiceWithPersistence(
     entityResolver,
-    repositories,
+    acceptedPersistence,
+    repositories.reviewQueue,
   );
 }
