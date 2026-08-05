@@ -103,6 +103,51 @@ function renderEvidence(item: DirectoryEvidence): string {
 
 export function renderDirectoryCompanyProfile(company: DirectoryCompany | null): string {
   if (!company) return renderPageLayout("Company not found", '<main class="empty panel"><h1>Company not found</h1><a href="/">Return to directory</a></main>');
-  const evidence = [...company.evidence].sort((a, b) => b.observedAt.localeCompare(a.observedAt)).map(renderEvidence).join("");
+  const timelineEvidence = [...company.evidence].sort((a, b) => b.observedAt.localeCompare(a.observedAt)).map(renderEvidence).join("");
+  const indicators = summarizeCompanyIndicators(company);
+  const indicatorPanel = `<section><p class="eyebrow">Current indicators · through ${escapeHtml(indicators.referenceDate)}</p>
+    <div class="grid"><article class="evidence"><h3>${indicators.jobPostingsObservedLast90Days}</h3><p>Job postings observed in the last 90 days</p></article>
+    <article class="evidence"><h3>${indicators.governmentContractsObservedLast24Months}</h3><p>Government contracts observed in the last 24 months</p></article>
+    <article class="evidence"><h3>${indicators.securityClearanceRolesDetected}</h3><p>Recent roles explicitly requiring security clearance</p></article>
+    <article class="evidence"><h3>${indicators.bilingualRolesDetected}</h3><p>Recent roles explicitly requiring bilingual capability</p></article></div>
+    <p class="stat">Technologies explicitly mentioned recently: ${escapeHtml(indicators.technologiesRecentlyMentioned.join(", ") || "None")}. Counts use observed Evidence, not inferred Company performance.</p>
+  </section>`;
+  const evidence = indicatorPanel + timelineEvidence;
   return renderPageLayout(company.canonicalName, `<main><section class="profileHead"><div><p class="eyebrow">Company intelligence profile</p><h1>${escapeHtml(company.canonicalName)}</h1><p class="lede">${escapeHtml(company.shortDescription)}</p><div class="meta"><span class="badge">${escapeHtml(company.sector)}</span><span class="badge">${escapeHtml(company.operatingStatus)}</span></div></div><aside class="factlist panel"><dl><div><dt>Domain</dt><dd>${escapeHtml(company.canonicalDomain)}</dd></div><div><dt>Location</dt><dd>${escapeHtml(company.location)}</dd></div><div><dt>Employees</dt><dd>${escapeHtml(company.employeeBand ?? "Not yet verified")}</dd></div><div><dt>Last verified</dt><dd>${escapeHtml(company.lastVerifiedDate)}</dd></div></dl><p><a class="source" href="${escapeHtml(company.profileSource.url)}">Profile Source: ${escapeHtml(company.profileSource.name)}</a></p></aside></section><section><p class="eyebrow">Evidence timeline · ${company.evidence.length} Signals</p><div class="timeline">${evidence || '<div class="empty panel">No contract or hiring Signals have been added yet. Profile identity remains Source-backed.</div>'}</div></section></main>`);
+}
+export type DirectoryIndicators = {
+  jobPostingsObservedLast90Days: number;
+  governmentContractsObservedLast24Months: number;
+  securityClearanceRolesDetected: number;
+  bilingualRolesDetected: number;
+  technologiesRecentlyMentioned: ReadonlyArray<string>;
+  referenceDate: string;
+};
+
+function dateBefore(referenceDate: string, months: number, days: number): string {
+  const date = new Date(`${referenceDate}T00:00:00Z`);
+  date.setUTCMonth(date.getUTCMonth() - months);
+  date.setUTCDate(date.getUTCDate() - days);
+  return date.toISOString().slice(0, 10);
+}
+
+export function summarizeCompanyIndicators(company: DirectoryCompany): DirectoryIndicators {
+  const jobCutoff = dateBefore(company.lastVerifiedDate, 0, 90);
+  const contractCutoff = dateBefore(company.lastVerifiedDate, 24, 0);
+  const recentJobs = company.evidence.filter(
+    (item): item is Extract<DirectoryEvidence, { kind: "job_posting" }> =>
+      item.kind === "job_posting" && item.observedAt >= jobCutoff &&
+      item.observedAt <= company.lastVerifiedDate,
+  );
+  return {
+    jobPostingsObservedLast90Days: recentJobs.length,
+    governmentContractsObservedLast24Months: company.evidence.filter(
+      (item) => item.kind === "government_contract" &&
+        item.observedAt >= contractCutoff && item.observedAt <= company.lastVerifiedDate,
+    ).length,
+    securityClearanceRolesDetected: recentJobs.filter((item) => item.securityClearanceRequired).length,
+    bilingualRolesDetected: recentJobs.filter((item) => item.bilingualRequired).length,
+    technologiesRecentlyMentioned: [...new Set(recentJobs.flatMap((item) => item.technologies))].sort(),
+    referenceDate: company.lastVerifiedDate,
+  };
 }

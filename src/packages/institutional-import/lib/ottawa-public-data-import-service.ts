@@ -4,7 +4,7 @@ import type { ColumnMapping, ImportFile, ImportInspection, ImportOutcome, Instit
 const REQUIRED_COLUMNS = ["research_company_key", "company_name", "canonical_domain", "headquarters_city", "province", "country", "operating_status", "short_description", "primary_sector", "employee_band", "founded_year", "last_verified_date", "source_url"] as const;
 type ParsedCsv = { columns: string[]; rows: string[][] };
 
-function parseCsv(text: string): ParsedCsv {
+export function parseCsv(text: string): ParsedCsv {
   const records: string[][] = []; let record: string[] = []; let field = ""; let quoted = false;
   for (let index = 0; index < text.length; index += 1) {
     const character = text[index];

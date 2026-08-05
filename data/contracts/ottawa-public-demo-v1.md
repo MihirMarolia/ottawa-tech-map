@@ -7,3 +7,11 @@ The importer performs deterministic validation and emits typed Company proposals
 `sources.csv` is the provenance manifest. It contains Source metadata and no copied page bodies, personal information, or unrestricted research notes. `observed_date` records when the public page was verified; it is not a publication date.
 
 This version permits only `active`, `inactive`, or `merged` operating status. Canonical domains are lowercase hostnames without schemes or paths. Dates use `YYYY-MM-DD`.
+## Reproducible baseline
+
+The controlled baseline contains 10 reviewed Companies and 28 official public
+Source records. Every Source references a baseline research Company key, uses
+an HTTPS URL, includes an observation date, and is marked official_source and
+public_web. The manifest validator rejects unknown Company keys, duplicate
+Source URLs, malformed dates, non-HTTPS URLs, and unsupported verification or
+access states before any proposal can proceed.

@@ -21,6 +21,11 @@ describe("Ottawa Government Intent Monitor", () => {
       containsFixtureEvidence: false,
     });
     expect(rows.find((row) => row.company.canonicalName === "Shopify")?.category).toBe("No recent evidence");
+    expect(rows.filter((row) =>
+      row.category === "Contract plus current hiring" &&
+      row.containsFixtureEvidence,
+    ).map((row) => row.company.canonicalName)).toHaveLength(3);
+
   });
 
   it("renders methodology, recency, provenance links, and fixture disclosure", () => {

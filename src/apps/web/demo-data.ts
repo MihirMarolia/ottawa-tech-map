@@ -79,7 +79,88 @@ const fictionalCompany: DirectoryCompany = {
   ],
 };
 
+const additionalFictionalCompanies: ReadonlyArray<DirectoryCompany> = [
+  {
+    slug: "atlas-secure-networks",
+    canonicalName: "Atlas Secure Networks",
+    canonicalDomain: "atlas-secure.example",
+    location: "Ottawa, Ontario",
+    sector: "Cybersecurity",
+    employeeBand: "11–50",
+    operatingStatus: "active",
+    shortDescription: "Fictional Company proving multi-source federal-market Evidence.",
+    lastVerifiedDate: "2026-08-05",
+    profileSource: { name: "Fictional Ottawa intelligence fixture", url: "https://atlas-secure.example/about" },
+    evidence: [
+      {
+        kind: "government_contract",
+        observedAt: "2026-05-14",
+        confidence: 0.97,
+        sourceName: "Fictional federal award fixture",
+        sourceUrl: "https://contracts.example/notices/atlas-2026-014",
+        awardingOrganization: "Fictional federal cyber agency",
+        contractType: "Cybersecurity services",
+        externalReference: "atlas-2026-014",
+        fixture: true,
+      },
+      {
+        kind: "job_posting",
+        observedAt: "2026-07-20",
+        confidence: 0.96,
+        sourceName: "Atlas careers fixture",
+        sourceUrl: "https://atlas-secure.example/careers/security-analyst",
+        jobTitle: "Security Operations Analyst",
+        location: "Ottawa, Ontario",
+        technologies: ["Python"],
+        securityClearanceRequired: true,
+        bilingualRequired: true,
+        fixture: true,
+      },
+    ],
+  },
+  {
+    slug: "civic-orbit-technologies",
+    canonicalName: "Civic Orbit Technologies",
+    canonicalDomain: "civic-orbit.example",
+    location: "Ottawa, Ontario",
+    sector: "Defence and dual-use technology",
+    employeeBand: "51–250",
+    operatingStatus: "active",
+    shortDescription: "Fictional Company proving deterministic contract and hiring Evidence.",
+    lastVerifiedDate: "2026-08-05",
+    profileSource: { name: "Fictional Ottawa intelligence fixture", url: "https://civic-orbit.example/about" },
+    evidence: [
+      {
+        kind: "government_contract",
+        observedAt: "2026-04-02",
+        confidence: 0.98,
+        sourceName: "Fictional federal award fixture",
+        sourceUrl: "https://contracts.example/notices/orbit-2026-008",
+        awardingOrganization: "Fictional federal space department",
+        contractType: "Satellite communications research",
+        externalReference: "orbit-2026-008",
+        fixture: true,
+      },
+      {
+        kind: "job_posting",
+        observedAt: "2026-07-28",
+        confidence: 0.95,
+        sourceName: "Civic Orbit careers fixture",
+        sourceUrl: "https://civic-orbit.example/careers/embedded-engineer",
+        jobTitle: "Embedded Systems Engineer",
+        location: "Ottawa, Ontario",
+        technologies: ["C++", "Linux"],
+        securityClearanceRequired: true,
+        bilingualRequired: false,
+        fixture: true,
+      },
+    ],
+  },
+];
+
+
 export const ottawaDemoDirectory: ReadonlyArray<DirectoryCompany> = [
   fictionalCompany,
+  ...additionalFictionalCompanies,
   ...publicCompanies,
 ];

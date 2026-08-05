@@ -50,6 +50,22 @@ export type ImportRowIssue = {
   code: string;
   explanation: string;
 };
+export type OttawaSourceProposal = {
+  researchCompanyKey: string;
+  sourceName: string;
+  sourceTitle: string;
+  sourceUrl: string;
+  evidenceType: string;
+  observedDate: string;
+  verificationStatus: "official_source";
+  accessRestriction: "public_web";
+};
+
+export type OttawaSourceManifestValidation = {
+  records: ReadonlyArray<OttawaSourceProposal>;
+  issues: ReadonlyArray<ImportRowIssue>;
+};
+
 
 export type OttawaImportPreview = ImportPreview & {
   proposals: ReadonlyArray<OttawaCompanyProposal>;
@@ -67,3 +83,4 @@ export interface InstitutionalImportService {
 }
 
 export { createOttawaPublicDataImportService } from "./lib/ottawa-public-data-import-service.js";
+export { validateOttawaSourceManifest } from "./lib/ottawa-source-manifest.js";
