@@ -28,8 +28,42 @@ export type ImportOutcome = {
   reviewRequiredRows: number;
 };
 
+export type OttawaCompanyProposal = {
+  researchCompanyKey: string;
+  canonicalName: string;
+  canonicalDomain: string;
+  headquartersCity: string;
+  province: string;
+  country: string;
+  operatingStatus: "active" | "inactive" | "merged";
+  shortDescription: string;
+  primarySector: string;
+  employeeBand: string | null;
+  foundedYear: number | null;
+  lastVerifiedDate: string;
+  sourceUrl: string;
+};
+
+export type ImportRowIssue = {
+  rowNumber: number;
+  researchCompanyKey: string | null;
+  code: string;
+  explanation: string;
+};
+
+export type OttawaImportPreview = ImportPreview & {
+  proposals: ReadonlyArray<OttawaCompanyProposal>;
+  issues: ReadonlyArray<ImportRowIssue>;
+};
+
+export type OttawaCompanyProposalCommitter = (
+  proposal: OttawaCompanyProposal,
+) => Promise<"accepted" | "review_required" | "rejected">;
+
 export interface InstitutionalImportService {
   inspect(file: ImportFile): Promise<ImportInspection>;
   preview(mapping: ColumnMapping): Promise<ImportPreview>;
   commit(previewId: PreviewId): Promise<ImportOutcome>;
 }
+
+export { createOttawaPublicDataImportService } from "./lib/ottawa-public-data-import-service.js";
