@@ -109,3 +109,35 @@ export type GovernmentContractFixture = {
   observedAt: string;
   rawText: import("../privacy-gateway/index.js").RawSourceText;
 };
+
+export type EmploymentType =
+  | "full_time"
+  | "part_time"
+  | "contract"
+  | "temporary"
+  | "unknown";
+
+export type JobPostingSignal = {
+  id: SignalId;
+  sourceId: SourceId;
+  companyId: CompanyId;
+  signalType: "job_posting_observed";
+  jobTitle: string;
+  location: string;
+  postingDate: string;
+  technologies: ReadonlyArray<string>;
+  securityClearanceRequired: boolean;
+  bilingualRequired: boolean;
+  employmentType: EmploymentType;
+  expansionEvidence: boolean;
+  observedAt: string;
+  confidence: number;
+  schemaVersion: "job-posting-signal/v1";
+  externalReference: ExternalReference | null;
+};
+
+export type JobPostingFixture = {
+  source: { id: SourceId; name: string; url: string };
+  observedAt: string;
+  rawText: import("../privacy-gateway/index.js").RawSourceText;
+};
