@@ -30,6 +30,20 @@ The contract never interprets the absence of wording as evidence of growth, cont
 
 ## Privacy and persistence
 
+## AI-ready extraction boundary
+
+The optional job-posting extractor accepts only branded Sanitized Corporate
+Text. It returns a review-required proposal rather than an accepted Signal.
+Every proposed field carries Source identity, observation date, model version,
+extractor version, confidence, and character-offset Evidence location. It does
+not return or persist source excerpts.
+
+A model adapter may be enabled only after at least 20 sanitized evaluation
+cases meet precision thresholds of 95% for security-clearance requirements,
+95% for bilingual requirements, and 90% for named technologies. Every
+evaluation case must produce structurally valid output. The repository's
+deterministic evaluation model proves this contract without a live model call;
+
 Raw posting text, contact information, unrestricted HTML, prompts, and arbitrary payload fields are not Signal fields. PostgreSQL validates an allowlisted structured payload, matching schema version, and observation-date parity. Unsupported Signal types remain rejected.
 
 Automated ingestion resolves only an existing active Company by exact canonical domain. Missing or ambiguous identity remains a Review Queue outcome. This ticket does not add scraping, a generalized Signal plugin system, AI extraction, or automatic Company creation.
