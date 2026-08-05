@@ -9,7 +9,7 @@ describe("Ottawa Company directory", () => {
   it("searches and filters using explicit Evidence", () => {
     expect(filterDirectory(ottawaDemoDirectory, { query: "cybersecurity" }).map((company) => company.canonicalName)).toEqual(["Field Effect"]);
     expect(filterDirectory(ottawaDemoDirectory, { governmentContract: true }).map((company) => company.canonicalName)).toEqual(["Northstar Civic Systems"]);
-    expect(filterDirectory(ottawaDemoDirectory, { activeHiring: true }).map((company) => company.canonicalName)).toEqual(["Northstar Civic Systems"]);
+    expect(filterDirectory(ottawaDemoDirectory, { activeHiring: true }).map((company) => company.canonicalName)).toEqual(["Fullscript", "Northstar Civic Systems"]);
   });
 
   it("renders the real directory surface with provenance-aware labels", () => {

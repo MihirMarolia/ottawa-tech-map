@@ -22,7 +22,19 @@ const publicCompanies: ReadonlyArray<DirectoryCompany> = [
   shortDescription,
   lastVerifiedDate: "2026-08-05",
   profileSource: { name: sourceName, url: sourceUrl },
-  evidence: [],
+  evidence: slug === "fullscript" ? [{
+    kind: "job_posting" as const,
+    observedAt: "2026-08-05",
+    confidence: 0.95,
+    sourceName: "Fullscript Careers",
+    sourceUrl: "https://fullscript.com/careers",
+    jobTitle: "Director of Engineering, Developer Infrastructure",
+    location: "Ottawa, Ontario",
+    technologies: [],
+    securityClearanceRequired: false,
+    bilingualRequired: false,
+    fixture: false,
+  }] : [],
 }));
 
 const fictionalCompany: DirectoryCompany = {

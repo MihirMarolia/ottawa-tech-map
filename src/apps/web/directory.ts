@@ -50,7 +50,7 @@ const escapeHtml = (value: string) => value
   .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;").replaceAll("'", "&#039;");
 
-const layout = (title: string, content: string) => `<!doctype html>
+export const renderPageLayout = (title: string, content: string) => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escapeHtml(title)} | Ottawa Tech Intelligence</title><style>
 :root{color-scheme:dark;--ink:#eef4ff;--muted:#9caec7;--line:#25354a;--panel:#111c2b;--accent:#52e0a4;--blue:#62a8ff;--bg:#07101d}
@@ -91,7 +91,7 @@ export function renderCompanyDirectory(companies: ReadonlyArray<DirectoryCompany
     </a>`;
   }).join("");
   const sectorOptions = sectors.map((sector) => `<option ${filters.sector === sector ? "selected" : ""}>${escapeHtml(sector)}</option>`).join("");
-  return layout("Company directory", `<main><section class="hero"><p class="eyebrow">Ottawa evidence index</p><h1>Find the companies behind Ottawa's technology economy.</h1><p class="lede">Search a reviewed Company baseline and inspect the public Source behind every profile. Signal filters show only explicit evidence.</p></section>
+  return renderPageLayout("Company directory", `<main><section class="hero"><p class="eyebrow">Ottawa evidence index</p><h1>Find the companies behind Ottawa's technology economy.</h1><p class="lede">Search a reviewed Company baseline and inspect the public Source behind every profile. Signal filters show only explicit evidence.</p></section>
   <form class="filters panel" method="get"><input aria-label="Search companies" name="q" value="${escapeHtml(filters.query ?? "")}" placeholder="Search company, domain, or sector"><select aria-label="Sector" name="sector"><option value="">All sectors</option>${sectorOptions}</select><select aria-label="Employee band" name="employeeBand"><option value="">Any employee band</option><option>2–10</option><option>11–50</option><option>51–250</option><option>250+</option></select><button>Search</button><div class="checks"><label><input type="checkbox" name="governmentContract" value="1" ${filters.governmentContract ? "checked" : ""}> Government-contract Evidence</label><label><input type="checkbox" name="activeHiring" value="1" ${filters.activeHiring ? "checked" : ""}> Active hiring Evidence</label></div></form>
   <p class="eyebrow">${filtered.length} Companies</p><section class="grid">${cards || '<div class="empty panel">No Companies match these evidence filters.</div>'}</section></main>`);
 }
@@ -102,7 +102,7 @@ function renderEvidence(item: DirectoryEvidence): string {
 }
 
 export function renderDirectoryCompanyProfile(company: DirectoryCompany | null): string {
-  if (!company) return layout("Company not found", '<main class="empty panel"><h1>Company not found</h1><a href="/">Return to directory</a></main>');
+  if (!company) return renderPageLayout("Company not found", '<main class="empty panel"><h1>Company not found</h1><a href="/">Return to directory</a></main>');
   const evidence = [...company.evidence].sort((a, b) => b.observedAt.localeCompare(a.observedAt)).map(renderEvidence).join("");
-  return layout(company.canonicalName, `<main><section class="profileHead"><div><p class="eyebrow">Company intelligence profile</p><h1>${escapeHtml(company.canonicalName)}</h1><p class="lede">${escapeHtml(company.shortDescription)}</p><div class="meta"><span class="badge">${escapeHtml(company.sector)}</span><span class="badge">${escapeHtml(company.operatingStatus)}</span></div></div><aside class="factlist panel"><dl><div><dt>Domain</dt><dd>${escapeHtml(company.canonicalDomain)}</dd></div><div><dt>Location</dt><dd>${escapeHtml(company.location)}</dd></div><div><dt>Employees</dt><dd>${escapeHtml(company.employeeBand ?? "Not yet verified")}</dd></div><div><dt>Last verified</dt><dd>${escapeHtml(company.lastVerifiedDate)}</dd></div></dl><p><a class="source" href="${escapeHtml(company.profileSource.url)}">Profile Source: ${escapeHtml(company.profileSource.name)}</a></p></aside></section><section><p class="eyebrow">Evidence timeline · ${company.evidence.length} Signals</p><div class="timeline">${evidence || '<div class="empty panel">No contract or hiring Signals have been added yet. Profile identity remains Source-backed.</div>'}</div></section></main>`);
+  return renderPageLayout(company.canonicalName, `<main><section class="profileHead"><div><p class="eyebrow">Company intelligence profile</p><h1>${escapeHtml(company.canonicalName)}</h1><p class="lede">${escapeHtml(company.shortDescription)}</p><div class="meta"><span class="badge">${escapeHtml(company.sector)}</span><span class="badge">${escapeHtml(company.operatingStatus)}</span></div></div><aside class="factlist panel"><dl><div><dt>Domain</dt><dd>${escapeHtml(company.canonicalDomain)}</dd></div><div><dt>Location</dt><dd>${escapeHtml(company.location)}</dd></div><div><dt>Employees</dt><dd>${escapeHtml(company.employeeBand ?? "Not yet verified")}</dd></div><div><dt>Last verified</dt><dd>${escapeHtml(company.lastVerifiedDate)}</dd></div></dl><p><a class="source" href="${escapeHtml(company.profileSource.url)}">Profile Source: ${escapeHtml(company.profileSource.name)}</a></p></aside></section><section><p class="eyebrow">Evidence timeline · ${company.evidence.length} Signals</p><div class="timeline">${evidence || '<div class="empty panel">No contract or hiring Signals have been added yet. Profile identity remains Source-backed.</div>'}</div></section></main>`);
 }

@@ -6,6 +6,7 @@ import {
   type DirectoryFilters,
 } from "../web/directory.js";
 
+import { renderGovernmentIntentMonitor } from "../web/government-intent.js";
 const portValue = Number(process.env.PORT ?? "43127");
 if (!Number.isSafeInteger(portValue) || portValue < 1 || portValue > 65535) {
   throw new Error("PORT must be a valid TCP port");
@@ -24,6 +25,8 @@ const server = createServer((request, response) => {
       activeHiring: url.searchParams.get("activeHiring") === "1",
     };
     html = renderCompanyDirectory(ottawaDemoDirectory, filters);
+  } else if (url.pathname === "/government-intent") {
+    html = renderGovernmentIntentMonitor(ottawaDemoDirectory);
   } else if (url.pathname.startsWith("/companies/")) {
     const slug = decodeURIComponent(url.pathname.slice("/companies/".length));
     const company = ottawaDemoDirectory.find((candidate) => candidate.slug === slug) ?? null;
