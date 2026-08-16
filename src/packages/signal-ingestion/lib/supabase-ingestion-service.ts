@@ -99,17 +99,16 @@ class SupabaseGovernmentContractIngestionService
       observedAt: sourceDocument.observedAt,
     };
 
-    const { data: runData, error: runError } = await this.client
-      .from("ingestion_runs")
-      .insert({ status: "completed", total_items: 1, accepted_items: 1 })
-      .select("id")
-      .single();
-    if (runError || !runData) {
+    const { data: runId, error: runError } = await this.client.rpc(
+      "create_ingestion_run",
+      { planned_total_items: 1 },
+    );
+    if (runError || !runId) {
       throw new Error(
         `Failed to create ingestion run: ${runError?.message ?? "no data"}`,
       );
     }
-    const ingestionRunId = runData.id as string;
+    const ingestionRunId = runId as string;
 
     const { data: rpcData, error: rpcError } = await this.client.rpc(
       "persist_government_contract_item",
@@ -140,7 +139,7 @@ class SupabaseGovernmentContractIngestionService
       );
     }
 
-    const result = rpcData as RpcResult;
+    const result = (rpcData as ReadonlyArray<RpcResult>)[0] ?? (rpcData as RpcResult);
     const sourceId = result.source_id as unknown as SourceId;
     const signalId = result.signal_id as unknown as SignalId;
 
