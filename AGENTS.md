@@ -112,3 +112,7 @@ Before adopting generated code, verify:
 - dependency constraints
 
 The fastest implementation is not necessarily the correct implementation.
+
+### External agent boundary
+
+External AI development platforms may inspect and prototype against this repository, but no external agent may introduce architectural, schema, persistence, security, or domain-contract changes without following the repository's defined implementation workflow.
