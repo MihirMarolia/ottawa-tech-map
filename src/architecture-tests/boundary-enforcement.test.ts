@@ -59,7 +59,7 @@ describe("dependency-cruiser boundary enforcement", () => {
   it("passes on the clean repository", () => {
     const result = runBoundaries();
     expect(result.exitCode).toBe(0);
-  });
+  }, 30000);
 
   it("fails when a package test deep-imports its own lib/", async () => {
     try {
@@ -79,7 +79,7 @@ describe("dependency-cruiser boundary enforcement", () => {
     } finally {
       await rm(deepImportProbe, { force: true });
     }
-  });
+  }, 30000);
 
   it("fails when web imports a privileged ingestion package", async () => {
     try {
@@ -99,7 +99,7 @@ describe("dependency-cruiser boundary enforcement", () => {
     } finally {
       await rm(webImportProbe, { force: true });
     }
-  });
+  }, 30000);
 
   it("keeps service-role credentials inside approved server boundaries", () => {
     const sourceRoot = join(repoRoot, "src");

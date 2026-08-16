@@ -48,3 +48,67 @@ A ticket is not complete unless:
 - changed files and deviations are reported
 
 Do not accept "implemented successfully" as evidence.
+
+## Multi-agent tool policy
+
+This repository may be accessed by multiple AI development environments,
+including Codex, Cursor, Lovable, Bolt, Replit, and Manus.
+
+GitHub is the canonical source of truth.
+
+### Tool roles
+
+| Tool | Job | Authority |
+|------|-----|-----------|
+| **Codex** | Architecture, core implementation, refactoring, tests | Highest |
+| **Cursor** | Local development, debugging, surgical edits | High |
+| **Lovable** | UI/product experiments, layouts, interaction prototypes | Medium |
+| **Bolt** | Disposable prototypes, alternative UI concepts, proof-of-concept frontend | Medium |
+| **Replit** | Isolated experiments, demonstrations, temporary prototypes | Medium/Low |
+| **Manus** | Research, data gathering, source collection, dataset preparation, documentation | Low for core code |
+| **GitHub** | Source control, tickets, PRs, history | Single source of truth |
+
+### Promotion rule
+
+Experiments created in Lovable, Bolt, or Replit are **prototypes** until explicitly promoted.
+
+Prototype code must be reviewed before entering the canonical repository.
+
+The canonical repository determines:
+- architecture
+- domain contracts
+- database schema
+- API contracts
+- testing requirements
+- production behavior
+
+### No parallel production editing
+
+Only **one** agent may own an implementation task at a time.
+
+Do not simultaneously modify the same production branch from multiple tools.
+
+If two tools need to work on related areas, they must use separate branches and merge through GitHub.
+
+### Prototype-to-production flow
+
+```text
+Idea → Prototype (Lovable/Bolt/Replit) → Evaluate → GitHub Issue
+→ Specification → Implementation (Codex/Cursor) → Tests → PR → Review → Merge
+```
+
+Never: Idea → AI generates application → overwrite production repository.
+
+### Architectural authority
+
+AI-generated code does not override existing architecture.
+
+Before adopting generated code, verify:
+- domain boundaries
+- interfaces
+- persistence contracts
+- security model
+- test requirements
+- dependency constraints
+
+The fastest implementation is not necessarily the correct implementation.
