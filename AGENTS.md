@@ -113,6 +113,13 @@ Before adopting generated code, verify:
 
 The fastest implementation is not necessarily the correct implementation.
 
+### Evidence over inference
+
+No inferred company intelligence may be persisted as fact.
+Every factual company attribute must have attributable evidence.
+Derived signals must identify the underlying evidence and methodology.
+Inferences must be explicitly classified as inferences, confidence-scored, and must never overwrite factual company records.
+
 ### External agent boundary
 
 External AI development platforms may inspect and prototype against this repository, but no external agent may introduce architectural, schema, persistence, security, or domain-contract changes without following the repository's defined implementation workflow.
