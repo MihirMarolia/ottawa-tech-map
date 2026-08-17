@@ -9,12 +9,13 @@ export default defineConfig({
       "src/application-tests/**/*.test.ts",
     ],
     typecheck: {
-      enabled: true,
-      include: [
-        "src/**/tests/**/*.test.ts",
-        "src/architecture-tests/**/*.test.ts",
-        "src/application-tests/**/*.test.ts",
-      ],
+      enabled: false,
+    },
+    fileParallelism: false,
+    poolOptions: {
+      threads: {
+        singleThread: true,
+      },
     },
   },
 });

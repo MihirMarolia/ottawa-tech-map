@@ -26,5 +26,8 @@
     "dependency-cruiser": "Enforces deep-module entry-point import boundaries via lint:boundaries.",
     "typescript": "Strict typecheck for package contracts and architecture tests.",
     "vitest": "Runs interface contract tests and architecture enforcement tests."
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.112.3"
   }
 }
