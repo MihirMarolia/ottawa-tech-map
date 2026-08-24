@@ -158,6 +158,8 @@ export function createSupabaseCompanyEvidenceQuery(input: {
       );
       return {
         company,
+        products: [],
+        services: [],
         evidence: rows.map((row) => ({
           signalId: row.signal_id as SignalId,
           signalType: "government_contract_awarded" as const,

@@ -1,40 +1,40 @@
-# Ottawa Tech Map — Verification Record
+# Ottawa Tech Map Verification Report — 2026-08-18
 
-## Historical 07A verification record
+## Final combined canonical-baseline addendum
 
-The sections below preserve the original 07A and public-read verification findings recorded for the previously used isolated environment. Those historical references are evidence only; they are **not** authorized targets for future operations.
+The sole authorized verification environment is **`ottawa-tech-map-verification`** (`hwgneqvtlbqecfroebqz`, `us-west-2`). The final rebuild used the supported linked-project reset path with `--no-seed`; it replayed the local migration chain successfully. No legacy Supabase project was used, no Base44 application code or data was imported, and no Ticket 08B corpus company or offering was promoted into durable canonical data.
 
-## Canonical-project addendum
+During remote-main integration, ten later timestamped wrapper migrations were removed because they replayed migrations already present in the canonical chain. A final additive reconciliation migration preserves the full combined contract: government-contract, job-posting, and offering payload validation; Review Queue and offering audit event types; and projection-only anonymous company reads. It also revokes direct anonymous/authenticated access to `public.companies`, leaving approved projections and the public profile RPC as the read interface.
 
-The user-controlled canonical environment is now **`ottawa-tech-map-verification`** (`hwgneqvtlbqecfroebqz`, `us-west-2`). It was reset with the supported linked-project reset path and rebuilt from the repository migration chain without seed loading or approved 08B corpus-company imports.
-
-| Gate | Canonical result | Status |
+| Gate | Final canonical result | Status |
 |---|---:|---|
-| Ordered clean migration replay | 16 reviewed migrations | **PASS** |
+| Ordered clean migration replay | 20 migrations; reconciliation migration last | **PASS** |
+| Duplicate replay wrapper migrations | 10 wrappers absent from canonical history | **PASS** |
 | Durable-schema pgTAP | 30/30 | **PASS** |
+| Persistence-adapter pgTAP | 6/6 | **PASS** |
+| Review Queue action pgTAP | 19/19 | **PASS** |
+| Job-posting signal-contract pgTAP | 6/6 | **PASS** |
 | Ticket 07A offerings pgTAP | 21/21 | **PASS** |
 | Fixture-only Ticket 08C pgTAP | 8/8 | **PASS** |
-| Durable Supabase integration | 6/6 | **PASS** |
-| Typecheck, boundary enforcement, ordinary tests, and build | Passed; 42 ordinary tests passed | **PASS** |
-| Anonymous `companies` SELECT | Denied | **PASS** |
-| Anonymous `offerings` SELECT | Denied | **PASS** |
-| Public company and offering projections | Readable | **PASS** |
-| Internal IDs in public Company Profile projection | None | **PASS** |
+| Combined database assertions | 90/90 | **PASS** |
+| Durable hosted Supabase integration | 6/6 | **PASS** |
+| Typecheck, dependency boundaries, ordinary tests, and build | 67 passed; 8 credential-dependent tests intentionally skipped in the ordinary run | **PASS** |
+| Direct anonymous `companies` and `offerings` reads | Denied | **PASS** |
+| Direct anonymous proposal and audit reads | Denied | **PASS** |
+| Approved public company, offering, and evidence projections | Readable | **PASS** |
+| Internal identifiers and unrestricted payloads in public projections | None | **PASS** |
+| Anonymous privileged apply and persistence RPC execution | Denied | **PASS** |
 | `git diff --check` | Passed | **PASS** |
 
-The credentialed six-scenario integration suite used genuinely separated clients through the canonical hosted API boundary. The public client used the anonymous key for public reads; the controlled ingestion client used the service-role key only in process memory. No secret value was printed, written to repository files, or committed.
+The credentialed six-scenario integration suite used separated clients through the canonical hosted API boundary. The public client used an anonymous key for public reads; the controlled ingestion client used a service-role key only in process memory. The suite passed accepted ingestion, replay/idempotency, evidence retrieval, eight-way concurrency convergence, cross-source-ID deduplication, and invalid-input rejection. No secret value was written to repository files, generated artifacts, or commit content.
 
-The 08C corpus boundary remains intact. The approved 08B corpus is represented only as sanitized test fixtures, and no approved company domains were found in durable canonical data after the clean reset. The offering observation adapter reuses the existing Ticket 07A proposal → approval → apply lifecycle, provenance, idempotency, and privacy-safe public projections without creating a parallel persistence path.
+The Ticket 08C boundary remains intact. Its approved 08B research input is represented only by sanitized test fixtures; the runtime contains no YAML parser or direct durable corpus insertion path. The fixture flow continues to exercise the governed Ticket 07A proposal → approval → apply lifecycle, source/signal provenance, idempotency, Review Queue routing, and privacy-safe public projections.
 
-> The verified baseline is ready for commit. Base44 remains outside the repository architecture: its approved research contribution is represented only through the controlled 08B research and 08C fixture artifacts, not imported application code or a second source of truth.
+> The combined baseline is ready for the authorized reconciliation commit and push. Base44 remains outside the architecture: only controlled research-derived fixture artifacts are represented, never Base44 application code or a second source of truth.
 
-## Historical detailed findings
+## Historical verification context
 
-The following historical sections document the earlier verification context and remain useful as a record of the remediation path.
-
-### Verification environments
-
-The earlier production Supabase project was not accessed or modified. An earlier isolated non-production project was used to establish the initial schema and security evidence. It is now non-canonical and not authorized for future work.
+Earlier verification records are retained as context only. They refer to pre-canonical environments and migration states that are no longer authorized for operations. The final combined canonical-baseline result above supersedes those historical gates for release and commit decisions.
 
 ### Durable Supabase integration — six scenarios
 
@@ -47,6 +47,6 @@ The earlier production Supabase project was not accessed or modified. An earlier
 | 5 | Cross-source-ID deduplication | A replay with a different supplied source ID resolves by fingerprint rather than duplicating the canonical signal. |
 | 6 | Invalid-input rejection | An invalid source document is rejected without evidence persistence. |
 
-### Architecture conclusions
+### Final architecture conclusion
 
-The durable schema, public-read, offering, audit, idempotency, concurrency, and durable HTTP integration boundaries are verified. Public consumers remain restricted to approved privacy-safe projections; controlled writes remain service-role-only; and the repository migration chain is the canonical schema source.
+The canonical migration chain, durable schema, Review Queue workflow, job-posting and offering signal contracts, append-only audit behavior, idempotency, concurrency, privacy-safe public reads, and separated-client HTTP integration have been verified together. Public consumers are restricted to approved projections and controlled profile RPCs; governed writes remain service-role-only. The repository migration chain is the canonical schema source.
