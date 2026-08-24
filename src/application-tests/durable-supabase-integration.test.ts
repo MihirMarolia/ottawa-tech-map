@@ -1,16 +1,14 @@
 import { describe, expect, it, beforeAll } from "vitest";
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { createDurableIntegrationClientsFromEnvironment } from "../packages/database/index.js";
 import { randomUUID } from "node:crypto";
 import { createDurableGovernmentContractFixtureApplication } from "../packages/signal-ingestion/durable-application.js";
 import type { RawSourceText } from "../packages/privacy-gateway/index.js";
 import type { SourceId } from "../packages/signal-ingestion/index.js";
 import type { CompanyProfile, GovernmentContractEvidence } from "../packages/signal-ingestion/company-evidence.js";
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
-const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY ?? "";
-
 function skipIfNoCredentials(): boolean {
-  return SUPABASE_URL === "" || SUPABASE_ANON_KEY === "";
+  return createDurableIntegrationClientsFromEnvironment() === null;
 }
 
 const FIXTURE_DOMAIN = "northstar-civic.example";
@@ -82,19 +80,30 @@ function evidenceForRun(
 }
 
 describe("durable Supabase integration — government contract ingestion", () => {
-  let client: SupabaseClient;
+  let publicClient: SupabaseClient;
+  let ingestionClient: SupabaseClient;
 
   beforeAll(() => {
-    client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
+    const clients = createDurableIntegrationClientsFromEnvironment();
+    if (clients === null) {
+      return;
+    }
+    publicClient = clients.publicClient;
+    ingestionClient = clients.ingestionClient;
   });
+
+  function createApplication() {
+    return createDurableGovernmentContractFixtureApplication({
+      publicClient,
+      ingestionClient,
+    });
+  }
 
   it.skipIf(skipIfNoCredentials())(
     "accepted ingestion: persists via RPC and maps to domain result",
     async () => {
       const { fixture, sourceUrl } = makeUniqueFixture();
-      const app = createDurableGovernmentContractFixtureApplication(client);
+      const app = createApplication();
 
       const outcome = await app.ingestGovernmentContractFixture(fixture);
 
@@ -125,7 +134,7 @@ describe("durable Supabase integration — government contract ingestion", () =>
     "replay/idempotency: second submission returns already_processed with no duplicate",
     async () => {
       const { fixture, sourceUrl } = makeUniqueFixture();
-      const app = createDurableGovernmentContractFixtureApplication(client);
+      const app = createApplication();
 
       const first = await app.ingestGovernmentContractFixture(fixture);
       const second = await app.ingestGovernmentContractFixture(fixture);
@@ -155,7 +164,7 @@ describe("durable Supabase integration — government contract ingestion", () =>
     "evidence query: retrieves persisted company/signal/source data with provenance intact",
     async () => {
       const { fixture, sourceUrl } = makeUniqueFixture();
-      const app = createDurableGovernmentContractFixtureApplication(client);
+      const app = createApplication();
 
       const outcome = await app.ingestGovernmentContractFixture(fixture);
       expect(outcome.status).toBe("accepted");
@@ -190,7 +199,7 @@ describe("durable Supabase integration — government contract ingestion", () =>
     "concurrency: 8-way parallel ingestion converges to a single canonical record",
     async () => {
       const { fixture, sourceUrl } = makeUniqueFixture();
-      const app = createDurableGovernmentContractFixtureApplication(client);
+      const app = createApplication();
 
       const outcomes = await Promise.all(
         Array.from({ length: 8 }, () =>
@@ -233,7 +242,7 @@ describe("durable Supabase integration — government contract ingestion", () =>
     "replay with different source ID still deduplicates by fingerprint",
     async () => {
       const { fixture, externalRef } = makeUniqueFixture();
-      const app = createDurableGovernmentContractFixtureApplication(client);
+      const app = createApplication();
 
       const first = await app.ingestGovernmentContractFixture(fixture);
 
@@ -263,7 +272,7 @@ describe("durable Supabase integration — government contract ingestion", () =>
     "rejects invalid source document without persisting anything",
     async () => {
       const { fixture, sourceUrl } = makeUniqueFixture();
-      const app = createDurableGovernmentContractFixtureApplication(client);
+      const app = createApplication();
 
       const invalidFixture = {
         ...fixture,
@@ -279,7 +288,7 @@ describe("durable Supabase integration — government contract ingestion", () =>
 
       // Verify nothing was persisted for this run — query the evidence view
       // and filter by the unique source URL. No matching evidence should exist.
-      const { data, error } = await client
+      const { data, error } = await publicClient
         .from("public_company_evidence")
         .select("source_url")
         .eq("source_url", sourceUrl);

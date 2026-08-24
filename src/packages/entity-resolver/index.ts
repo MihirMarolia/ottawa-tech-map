@@ -8,7 +8,7 @@ export type Company = {
 };
 
 export type CompanyReference = {
-  observedName: string;
+  observedName?: string;
   observedDomain: string;
   jurisdiction: string;
 };
@@ -28,7 +28,10 @@ export type ResolutionCandidate = {
   confidence: number;
 };
 
-export type ReviewReason = "conflicting_evidence" | "low_confidence";
+export type ReviewReason =
+  | "company_not_found"
+  | "conflicting_evidence"
+  | "low_confidence";
 
 export type EntityResolutionResult =
   | {

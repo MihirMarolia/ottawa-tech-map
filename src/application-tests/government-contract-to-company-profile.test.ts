@@ -43,6 +43,8 @@ describe("government contract fixture to Company profile Evidence", () => {
 
     expect(companyProfile).toEqual({
       company: existingFixtureCompany,
+      products: [],
+      services: [],
       evidence: [
         {
           signalId: firstOutcome.status === "accepted" ? firstOutcome.signalId : "",

@@ -120,6 +120,10 @@ Every factual company attribute must have attributable evidence.
 Derived signals must identify the underlying evidence and methodology.
 Inferences must be explicitly classified as inferences, confidence-scored, and must never overwrite factual company records.
 
+### Public Data Boundary
+
+Client-facing applications and prototypes must consume approved privacy-safe Supabase projections or controlled read functions, never internal tables directly. They must not request broader anonymous privileges as a convenience. Privileged ingestion, setup, and apply operations require the controlled ingestion client; the public client is limited to approved read contracts. If a required public field is unavailable, propose the smallest new privacy-safe projection or controlled read contract with tests; do not broaden base-table grants as a shortcut.
+
 ### External agent boundary
 
 External AI development platforms may inspect and prototype against this repository, but no external agent may introduce architectural, schema, persistence, security, or domain-contract changes without following the repository's defined implementation workflow.

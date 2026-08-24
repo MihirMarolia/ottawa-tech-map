@@ -1,0 +1,474 @@
+manifest_version: 1
+status: ready_for_human_review
+purpose: >-
+  A controlled, primary-source research corpus for Ticket 08B. It supports human
+  review and future test-fixture preparation only; it is not a production data store
+  and does not authorize ingestion, schema changes, public-read changes, or UI changes.
+created_at: 2026-08-18
+retrieved_at: 2026-08-18
+
+collection_policy:
+  source_priority:
+    - official_company_website
+    - official_product_page
+    - official_service_page
+    - official_documentation
+    - official_press_release
+    - official_company_announcement
+    - government_procurement_record
+    - official_job_posting
+  permitted_source_types:
+    - official_product_page
+    - official_service_page
+    - official_company_page
+    - official_documentation
+    - official_press_release
+    - government_record
+    - other_primary_source
+  permitted_supports:
+    - company_identity
+    - product_observed
+    - service_observed
+    - offering_changed
+    - offering_discontinued
+    - hiring_signal
+    - contract_signal
+  prohibited:
+    - login_gated_or_private_source
+    - personal_contact_information
+    - raw_source_text
+    - inferred_offering_claim
+    - inferred_discontinuation_claim
+    - secondary_source_as_primary_evidence
+  review_rules:
+    - Record only a specific claim explicitly supported by the linked primary source.
+    - Use observed_date for a source publication or page date when available; otherwise retain null and use retrieved_at as capture metadata only.
+    - A missing or changed page is not evidence of offering_discontinued.
+    - offering_discontinued requires affirmative primary-source evidence and separate reviewer approval before any future ingestion.
+    - Secondary sources may identify candidates but must be recorded only in discovery notes, never as primary evidence.
+    - Do not include production UUIDs, raw page text, personal data, credentials, or scraped HTML.
+
+company_cohort:
+  - company: Kinaxis
+    canonical_domain: kinaxis.com
+    cohort_status: candidate_pending_human_review
+  - company: MindBridge
+    canonical_domain: mindbridge.ai
+    cohort_status: candidate_pending_human_review
+  - company: Solink
+    canonical_domain: solink.com
+    cohort_status: candidate_pending_human_review
+  - company: Assent
+    canonical_domain: assent.com
+    cohort_status: candidate_pending_human_review
+  - company: Field Effect
+    canonical_domain: fieldeffect.com
+    cohort_status: candidate_pending_human_review
+  - company: Rewind
+    canonical_domain: rewind.com
+    cohort_status: candidate_pending_human_review
+  - company: Klipfolio
+    canonical_domain: klipfolio.com
+    cohort_status: candidate_pending_human_review
+  - company: TrueContext
+    canonical_domain: truecontext.com
+    cohort_status: candidate_pending_human_review
+  - company: N-able
+    canonical_domain: n-able.com
+    cohort_status: candidate_pending_human_review
+  - company: Versaterm
+    canonical_domain: versaterm.com
+    cohort_status: candidate_pending_human_review
+
+records:
+  - record_id: t08b-001
+    company: Kinaxis
+    canonical_domain: kinaxis.com
+    source_type: official_product_page
+    source_name: Kinaxis
+    source_url: https://www.kinaxis.com/en/solutions/platform
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Kinaxis Maestro]
+    sanitized_claim: The page identifies Kinaxis Maestro as its supply-chain planning and decisioning platform.
+    notes: Page date unavailable; reviewer must validate candidate Company identity and offering classification before any proposal.
+
+  - record_id: t08b-002
+    company: Kinaxis
+    canonical_domain: kinaxis.com
+    source_type: official_press_release
+    source_name: Kinaxis
+    source_url: https://www.kinaxis.com/en/news/press-releases/2024/introducing-maestro-first-ai-infused-supply-chain-orchestration-platform
+    observed_date: 2024-06-18
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: offering_changed
+    offering_candidates: [Kinaxis Maestro]
+    sanitized_claim: The company announcement presents Maestro as the evolution of its flagship RapidResponse platform and describes its release as an AI-infused supply-chain orchestration platform.
+    notes: Supports a potential historical change observation only; it does not establish current lifecycle state by itself.
+
+  - record_id: t08b-003
+    company: Kinaxis
+    canonical_domain: kinaxis.com
+    source_type: official_product_page
+    source_name: Kinaxis
+    source_url: https://www.kinaxis.com/en/solutions/supply-planning
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Kinaxis Maestro]
+    sanitized_claim: The supply-planning page states that Kinaxis Maestro handles supply-chain challenges from demand planning through logistics orchestration.
+    notes: Page date unavailable; the statement supports an offering capability, not a separate named offering.
+
+  - record_id: t08b-004
+    company: MindBridge
+    canonical_domain: mindbridge.ai
+    source_type: official_company_page
+    source_name: MindBridge
+    source_url: https://www.mindbridge.ai/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [MindBridge AI]
+    sanitized_claim: The company page presents MindBridge as an independent oversight layer for autonomous financial oversight.
+    notes: Page date unavailable; reviewer must validate the canonical product name before proposal generation.
+
+  - record_id: t08b-005
+    company: MindBridge
+    canonical_domain: mindbridge.ai
+    source_type: official_product_page
+    source_name: MindBridge
+    source_url: https://www.mindbridge.ai/solutions
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [MindBridge audit intelligence]
+    sanitized_claim: The audit-and-assurance page describes AI-powered data analytics and audit risk assessment capabilities.
+    notes: Classification candidate is product; reviewer should decide whether this is a named offering or capability evidence for MindBridge AI.
+
+  - record_id: t08b-006
+    company: MindBridge
+    canonical_domain: mindbridge.ai
+    source_type: official_product_page
+    source_name: MindBridge
+    source_url: https://www.mindbridge.ai/platform
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [MindBridge AI Platform]
+    sanitized_claim: The platform page describes independent financial-transaction oversight, explainable risk detection, and continuous analysis.
+    notes: Page date unavailable; reviewer must validate whether the public canonical name is MindBridge AI Platform.
+
+  - record_id: t08b-007
+    company: Solink
+    canonical_domain: solink.com
+    source_type: official_company_page
+    source_name: Solink
+    source_url: https://solink.com/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Solink Video Intelligence Platform]
+    sanitized_claim: The company page presents an AI-driven video-intelligence platform that unifies video, data, and operations.
+    notes: Page date unavailable; reviewer must validate the canonical public offering name.
+
+  - record_id: t08b-008
+    company: Solink
+    canonical_domain: solink.com
+    source_type: official_product_page
+    source_name: Solink
+    source_url: https://solink.com/ai/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Solink AI]
+    sanitized_claim: The page presents Solink AI as a product that uses existing-camera footage for operational analysis, search, checks, and alerts.
+    notes: Page date unavailable; product classification is supported by product-page presentation.
+
+  - record_id: t08b-009
+    company: Solink
+    canonical_domain: solink.com
+    source_type: official_product_page
+    source_name: Solink
+    source_url: https://solink.com/cloud-video-management-system/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Solink Cloud VMS]
+    sanitized_claim: The page identifies Solink Cloud VMS as a cloud video-management system that pairs cameras and data.
+    notes: Page date unavailable; product classification is supported by the named product page.
+
+  - record_id: t08b-010
+    company: Solink
+    canonical_domain: solink.com
+    source_type: official_product_page
+    source_name: Solink
+    source_url: https://solink.com/video-alarms/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Solink Video Alarms]
+    sanitized_claim: The page identifies Solink Video Alarms as a camera-based security and monitoring offering.
+    notes: Page date unavailable; reviewer should validate whether Video Alarms is independently canonical or a platform capability.
+
+  - record_id: t08b-011
+    company: Assent
+    canonical_domain: assent.com
+    source_type: official_company_page
+    source_name: Assent
+    source_url: https://www.assent.com/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Assent Network]
+    sanitized_claim: The company page describes the Assent Network as a unified solution for product material compliance, product sustainability, and responsible sourcing.
+    notes: Page date unavailable; reviewer must validate the canonical product name and Company identity.
+
+  - record_id: t08b-012
+    company: Assent
+    canonical_domain: assent.com
+    source_type: official_product_page
+    source_name: Assent
+    source_url: https://www.assent.com/capabilities/platform/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Assent Native-AI]
+    sanitized_claim: The platform page identifies Assent Native-AI and describes a software, supplier-submission, and support offering.
+    notes: Page date unavailable; reviewer must decide whether Native-AI is a standalone Product or a feature of an existing canonical Offering.
+
+  - record_id: t08b-013
+    company: Field Effect
+    canonical_domain: fieldeffect.com
+    source_type: official_company_page
+    source_name: Field Effect
+    source_url: https://fieldeffect.com/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: service_observed
+    offering_candidates: [Field Effect managed detection and response]
+    sanitized_claim: The company page presents managed detection and response for cybersecurity risk reduction.
+    notes: Page date unavailable; the public presentation supports a managed-service candidate.
+
+  - record_id: t08b-014
+    company: Field Effect
+    canonical_domain: fieldeffect.com
+    source_type: official_product_page
+    source_name: Field Effect
+    source_url: https://fieldeffect.com/products
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Field Effect MDR]
+    sanitized_claim: The products page identifies Field Effect MDR as a cybersecurity platform.
+    notes: Page date unavailable; reviewer must decide whether the managed-delivery component should be represented separately as a Service.
+
+  - record_id: t08b-015
+    company: Field Effect
+    canonical_domain: fieldeffect.com
+    source_type: official_product_page
+    source_name: Field Effect
+    source_url: https://fieldeffect.com/products/mdr
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Field Effect MDR]
+    sanitized_claim: The MDR page describes a platform for continuous monitoring, detection, response, reporting, and human-led investigation.
+    notes: Page date unavailable; supports corroboration of the same named offering, not a new offering.
+
+  - record_id: t08b-016
+    company: Rewind
+    canonical_domain: rewind.com
+    source_type: official_company_page
+    source_name: Rewind
+    source_url: https://rewind.com/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Rewind SaaS backup and recovery]
+    sanitized_claim: The company page presents backup and recovery for SaaS application data.
+    notes: Page date unavailable; reviewer must validate the canonical product family name.
+
+  - record_id: t08b-017
+    company: Rewind
+    canonical_domain: rewind.com
+    source_type: official_product_page
+    source_name: Rewind
+    source_url: https://rewind.com/products/backups/shopify/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Rewind Backups for Shopify]
+    sanitized_claim: The page describes automated backup and recovery for Shopify store data.
+    notes: Page date unavailable; named product candidate is explicit.
+
+  - record_id: t08b-018
+    company: Rewind
+    canonical_domain: rewind.com
+    source_type: official_product_page
+    source_name: Rewind
+    source_url: https://rewind.com/products/protection-suite/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Rewind Protection Suite]
+    sanitized_claim: The page identifies Protection Suite and describes backup, monitoring, staging, and alert capabilities for Shopify stores.
+    notes: Page date unavailable; named product candidate is explicit.
+
+  - record_id: t08b-019
+    company: Klipfolio
+    canonical_domain: klipfolio.com
+    source_type: official_company_page
+    source_name: Klipfolio
+    source_url: https://www.klipfolio.com/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Klips]
+    sanitized_claim: The company page presents Klips as a dashboard solution for automated data retrieval, presentation, and distribution.
+    notes: Page date unavailable; reviewer must validate the canonical product name.
+
+  - record_id: t08b-020
+    company: Klipfolio
+    canonical_domain: klipfolio.com
+    source_type: official_product_page
+    source_name: Klipfolio
+    source_url: https://www.klipfolio.com/klips
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Klips]
+    sanitized_claim: The product page describes Klips as a real-time custom dashboard and reporting product.
+    notes: Page date unavailable; supports corroboration of the same named offering, not a new offering.
+
+  - record_id: t08b-021
+    company: TrueContext
+    canonical_domain: truecontext.com
+    source_type: official_company_page
+    source_name: TrueContext
+    source_url: https://truecontext.com/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [TrueContext field intelligence platform]
+    sanitized_claim: The company page presents a field-intelligence platform for field operations.
+    notes: The historical ProntoForms domain redirected to TrueContext during collection; reviewer must validate the Company/domain transition.
+
+  - record_id: t08b-022
+    company: TrueContext
+    canonical_domain: truecontext.com
+    source_type: official_product_page
+    source_name: TrueContext
+    source_url: https://truecontext.com/product/low-code-app-platform/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [TrueContext Field Service Intelligence Platform]
+    sanitized_claim: The product page presents a field-service intelligence platform with AI-ready data capture, workflows, analytics, and integrations.
+    notes: Page date unavailable; reviewer must decide whether this is the public canonical name or a description of the same platform.
+
+  - record_id: t08b-023
+    company: N-able
+    canonical_domain: n-able.com
+    source_type: official_product_page
+    source_name: N-able
+    source_url: https://www.n-able.com/products
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [N-central Endpoint Management, Cove Data Protection, N-sight Endpoint Management, EDR Endpoint Security, Take Control Remote Access]
+    sanitized_claim: The products page names integrated products for IT management, security, endpoint management, data protection, and remote access.
+    notes: One source supports multiple explicitly named product candidates; reviewer must split approved candidates only after canonical Company identity review.
+
+  - record_id: t08b-024
+    company: N-able
+    canonical_domain: n-able.com
+    source_type: official_product_page
+    source_name: N-able
+    source_url: https://www.n-able.com/products/cove-data-protection
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Cove Data Protection]
+    sanitized_claim: The product page presents Cove as a cloud-first backup and recovery offering.
+    notes: Page date unavailable; named product candidate is explicit.
+
+  - record_id: t08b-025
+    company: N-able
+    canonical_domain: n-able.com
+    source_type: official_product_page
+    source_name: N-able
+    source_url: https://www.n-able.com/products/n-central
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [N-central Endpoint Management]
+    sanitized_claim: The product page describes N-central as a flexible IT-management product with automation, templates, monitoring, integrations, and an AI assistant.
+    notes: Page date unavailable; named product candidate is explicit.
+
+  - record_id: t08b-026
+    company: Versaterm
+    canonical_domain: versaterm.com
+    source_type: official_company_page
+    source_name: Versaterm
+    source_url: https://www.versaterm.com/solutions
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Versaterm RMS, Versaterm CAD, Versaterm OpsIntel, Versaterm IAPro]
+    sanitized_claim: The solutions page enumerates named public-safety solutions including RMS, CAD, OpsIntel, and IAPro.
+    notes: One source supports multiple named product candidates; reviewer must split approved candidates only after canonical Company identity review.
+
+  - record_id: t08b-027
+    company: Versaterm
+    canonical_domain: versaterm.com
+    source_type: official_product_page
+    source_name: Versaterm
+    source_url: https://www.versaterm.com/solution/rms/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Versaterm RMS]
+    sanitized_claim: The product page presents Versaterm RMS as a records-management solution for public-safety workflow coordination and reporting.
+    notes: Page date unavailable; named product candidate is explicit.
+
+  - record_id: t08b-028
+    company: Versaterm
+    canonical_domain: versaterm.com
+    source_type: official_product_page
+    source_name: Versaterm
+    source_url: https://www.versaterm.com/solution/cad/
+    observed_date: null
+    retrieved_at: 2026-08-18
+    relevance: primary_evidence
+    supports: product_observed
+    offering_candidates: [Versaterm CAD]
+    sanitized_claim: The product page presents Versaterm CAD as a cloud-native computer-aided-dispatch solution for public-safety operations.
+    notes: Page date unavailable; named product candidate is explicit.

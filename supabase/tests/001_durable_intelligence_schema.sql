@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(29);
+select plan(30);
 
 select has_table('public', 'companies', 'Companies table exists');
 select has_table('public', 'sources', 'Sources table exists');
@@ -30,13 +30,13 @@ insert into public.companies (
   canonical_domain
 ) values (
   '00000000-0000-0000-0000-000000000001',
-  'Northstar Civic Systems',
-  'northstar-civic.example'
+  'Schema Fixture Systems',
+  'schema-fixture-systems.example'
 );
 
 select throws_ok(
   $$insert into public.companies (canonical_name, canonical_domain)
-    values ('Duplicate Northstar', 'northstar-civic.example')$$,
+    values ('Duplicate Northstar', 'schema-fixture-systems.example')$$,
   '23505',
   null,
   'Two active Companies cannot own one canonical domain'
@@ -297,8 +297,8 @@ insert into public.review_queue_candidates (
   '00000000-0000-0000-0000-000000000001',
   1,
   1,
-  'Northstar Civic Systems',
-  'northstar-civic.example',
+  'Schema Fixture Systems',
+  'schema-fixture-systems.example',
   'active',
   'canonical_domain'
 );
@@ -437,8 +437,9 @@ select throws_ok(
 
 select ok(
   not has_table_privilege('anon', 'public.companies', 'select')
+  and has_table_privilege('anon', 'public.public_company_profiles', 'select')
   and has_table_privilege('anon', 'public.public_company_evidence', 'select'),
-  'Anonymous clients can read only the approved public Evidence view'
+  'Anonymous clients read only approved public Company Profile and Evidence projections'
 );
 
 select is(
@@ -497,6 +498,16 @@ select ok(
       )
   ),
   'Public Evidence excludes internal identity and unrestricted payload fields'
+);
+
+select ok(
+  not exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'public_company_profiles'
+      and column_name in ('id', 'company_id', 'fingerprint', 'ingestion_run_id', 'correlation_id')
+  ),
+  'Public Company Profile excludes internal identifiers and operational metadata'
 );
 
 select * from finish();

@@ -1,5 +1,5 @@
 import type { Company, CompanyId } from "../../entity-resolver/index.js";
-import type { CompanyEvidenceQuery, CompanyProfile } from "../company-evidence.js";
+import type { CompanyEvidenceQuery, CompanyProfile, CompanySearchQuery } from "../company-evidence.js";
 import type {
   ExternalReference,
   GovernmentContractSignal,
@@ -141,6 +141,31 @@ export function createInMemoryRepositories(
   };
 }
 
+export function createCompanySearchQuery(
+  repositories: InMemoryRepositories,
+): CompanySearchQuery {
+  return {
+    async searchCompanies(query: string) {
+      const normalizedQuery = query.trim().toLowerCase();
+      if (normalizedQuery === "") {
+        return [];
+      }
+      return repositories.companies
+        .all()
+        .filter((company) => company.canonicalName.toLowerCase().includes(normalizedQuery) || company.canonicalDomain.toLowerCase().includes(normalizedQuery))
+        .map((company) => ({
+          company: {
+            canonicalName: company.canonicalName,
+            canonicalDomain: company.canonicalDomain,
+            jurisdiction: company.jurisdiction,
+          },
+          evidenceCount: repositories.signals.findByCompanyId(company.id).length,
+          offeringCount: 0,
+        }));
+    },
+  };
+}
+
 export function createCompanyEvidenceQuery(
   repositories: InMemoryRepositories,
 ): CompanyEvidenceQuery {
@@ -174,7 +199,7 @@ export function createCompanyEvidenceQuery(
           };
         });
 
-      return { company, evidence };
+      return { company, products: [], services: [], evidence };
     },
   };
 }

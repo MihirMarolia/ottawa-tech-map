@@ -141,3 +141,68 @@ export type JobPostingFixture = {
   observedAt: string;
   rawText: import("../privacy-gateway/index.js").RawSourceText;
 };
+
+export type OfferingKind = "product" | "service";
+export type OfferingSignalType =
+  | "product_added"
+  | "service_added"
+  | "product_changed"
+  | "service_changed";
+export type OfferingEvidenceType =
+  | "official_product_page"
+  | "official_service_page"
+  | "official_company_page"
+  | "official_documentation"
+  | "official_press_release"
+  | "government_record"
+  | "other_primary_source";
+
+export type ProductEvidenceInput = {
+  companyName?: string;
+  companyDomain: string;
+  kind: OfferingKind;
+  name: string;
+  description?: string;
+  sourceName: string;
+  sourceUrl: string;
+  observedAt: string;
+  evidenceType: OfferingEvidenceType;
+  confidence: number;
+  signalType?: OfferingSignalType;
+};
+
+export type OfferingProposalOutcome =
+  | {
+      status: "accepted";
+      disposition: "created" | "already_processed";
+      proposalId: string;
+      sourceId: SourceId;
+      signalId: SignalId;
+    }
+  | { status: "review_required"; reviewItemId: ReviewQueueItemId; reason: ReviewReason };
+
+export type OfferingProposalDecisionInput = {
+  proposalId: string;
+  actorIdentifier: string;
+  note?: string;
+};
+
+export type OfferingApplyOutcome = {
+  offeringId: string;
+  status: "approved" | "applied";
+};
+
+export interface OfferingProposalService {
+  propose(input: ProductEvidenceInput): Promise<OfferingProposalOutcome>;
+  approve(input: OfferingProposalDecisionInput): Promise<"approved" | "applied">;
+  reject(input: OfferingProposalDecisionInput): Promise<"rejected" | "applied" | "approved">;
+  apply(proposalId: string): Promise<OfferingApplyOutcome>;
+}
+
+export { createOfferingIngestionService } from "./lib/offering-ingestion.js";
+export {
+  prepareOfferingObservationFixture,
+  type FixtureOfferingClassification,
+  type OfferingObservationFixture,
+  type PreparedOfferingFixture,
+} from "./offering-observation-fixtures.js";

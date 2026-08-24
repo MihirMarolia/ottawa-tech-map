@@ -46,6 +46,38 @@ Examples:
 
 A Signal is evidence, not a final conclusion.
 
+## Offering
+
+A Company capability represented as a Product or Service and supported by one or more Signals.
+
+An Offering may have `active` or `unknown` status. Absence from a source is not evidence of discontinuation.
+
+## Product
+
+A Company Offering representing a named product supported by primary-source evidence.
+
+## Service
+
+A Company Offering representing a named service supported by primary-source evidence.
+
+## Offering Observation
+
+A privacy-sanitized, source-backed statement that a public source explicitly associates a named offering with a Company at an observation date.
+
+An Offering Observation is not a canonical Offering, a lifecycle conclusion, or an Interpretation. An observation may have an `unknown` product/service classification until sufficient evidence supports canonical classification.
+
+## Change Signal
+
+A versioned, source-backed statement about a supported difference in an Offering.
+
+A Product or Service change does not imply discontinuation. Absence from a source is not a Change Signal.
+
+## Interpretation
+
+A confidence-scored, versioned analytical statement about what a collection of observations and Signals may mean.
+
+An Interpretation must retain its evidence lineage and methodology. It is not a Company Fact and must never overwrite factual Company or Offering records.
+
 ## Company Fact
 
 A current normalized attribute inferred or verified from one or more Signals.

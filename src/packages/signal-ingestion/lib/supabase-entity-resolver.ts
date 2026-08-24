@@ -45,7 +45,7 @@ class SupabaseEntityResolver implements EntityResolver {
       return {
         status: "new_company",
         proposedCompany: {
-          observedName: input.observedName,
+          observedName: input.observedName ?? input.observedDomain,
           observedDomain: input.observedDomain,
           jurisdiction: input.jurisdiction,
         },
@@ -54,7 +54,7 @@ class SupabaseEntityResolver implements EntityResolver {
 
     const company = toCompany(data as CompanyRow);
 
-    if (company.canonicalName !== input.observedName) {
+    if (input.observedName !== undefined && company.canonicalName !== input.observedName) {
       return {
         status: "review_required",
         reason: "conflicting_evidence",

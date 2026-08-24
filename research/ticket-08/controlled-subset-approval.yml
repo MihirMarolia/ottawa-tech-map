@@ -1,0 +1,49 @@
+approval_version: 1
+status: user_authorized_controlled_subset
+recorded_at: 2026-08-18
+scope:
+  approved_for_offering_level_review_only:
+    - company: Kinaxis
+      canonical_domain: kinaxis.com
+    - company: MindBridge
+      canonical_domain: mindbridge.ai
+    - company: Solink
+      canonical_domain: solink.com
+    - company: Assent
+      canonical_domain: assent.com
+    - company: Field Effect
+      canonical_domain: fieldeffect.com
+    - company: Rewind
+      canonical_domain: rewind.com
+    - company: TrueContext
+      canonical_domain: truecontext.com
+    - company: Versaterm
+      canonical_domain: versaterm.com
+  on_hold:
+    - company: Klipfolio
+      canonical_domain: klipfolio.com
+      reason: First-party Ottawa-jurisdiction evidence is required before inclusion.
+    - company: N-able
+      canonical_domain: n-able.com
+      reason: A human browser must confirm Ottawa evidence and the three access-restricted source records before inclusion.
+
+non_authorized_scope:
+  - Ticket 08C implementation
+  - schema or migration changes
+  - durable ingestion or Supabase writes
+  - hiring signals
+  - government-contract signals
+  - offering_discontinued claims
+  - inferred interpretations
+  - invented company attributes
+  - geographic coordinates
+  - commit
+  - push
+
+approval_rules:
+  - A source must explicitly support the named candidate before it can be approved as a canonical offering observation.
+  - Corroborating sources must link to the same canonical offering rather than create duplicates.
+  - Each approved canonical offering must have exactly one kind in this corpus.
+  - An observation must not be represented as an inference or interpretation.
+  - The absence of a source mention must not imply discontinuation.
+  - The corpus remains a Git-reviewed research artifact; Supabase is the sole durable source of truth for operational data.

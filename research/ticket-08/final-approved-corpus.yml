@@ -1,0 +1,198 @@
+corpus_version: 1
+status: final_08b_controlled_corpus
+prepared_at: 2026-08-18
+purpose: >-
+  Approved, evidence-backed fixture corpus for a future Ticket 08C implementation
+  decision. This file is not canonical operational data and must not be ingested,
+  persisted, or exposed publicly without a separately approved implementation and
+  verification gate.
+
+scope:
+  company_count: 8
+  canonical_offering_count: 12
+  approved_signal_types:
+    - offering_observed
+  excluded_signal_types:
+    - offering_changed
+    - offering_discontinued
+    - hiring_signal
+    - contract_signal
+    - inferred_interpretation
+
+approved_companies:
+  - company: Kinaxis
+    canonical_domain: kinaxis.com
+    entity_resolution_status: existing_or_review_required
+  - company: MindBridge
+    canonical_domain: mindbridge.ai
+    entity_resolution_status: existing_or_review_required
+  - company: Solink
+    canonical_domain: solink.com
+    entity_resolution_status: existing_or_review_required
+  - company: Assent
+    canonical_domain: assent.com
+    entity_resolution_status: existing_or_review_required
+  - company: Field Effect
+    canonical_domain: fieldeffect.com
+    entity_resolution_status: existing_or_review_required
+  - company: Rewind
+    canonical_domain: rewind.com
+    entity_resolution_status: existing_or_review_required
+  - company: TrueContext
+    canonical_domain: truecontext.com
+    entity_resolution_status: existing_or_review_required
+  - company: Versaterm
+    canonical_domain: versaterm.com
+    entity_resolution_status: existing_or_review_required
+
+approved_offerings:
+  - offering_key: kinaxis|product|kinaxis maestro
+    company: Kinaxis
+    canonical_domain: kinaxis.com
+    canonical_name: Kinaxis Maestro
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-001]
+    corroborating_source_ids: [t08b-003]
+    observation_contract: Explicitly observed named platform; t08b-003 corroborates capabilities and does not create a separate offering.
+
+  - offering_key: mindbridge|product|mindbridge ai
+    company: MindBridge
+    canonical_domain: mindbridge.ai
+    canonical_name: MindBridge AI
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-004]
+    corroborating_source_ids: [t08b-005, t08b-006]
+    observation_contract: The Company page supports the named product; the solution and platform pages are retained as corroboration and must not create synonyms.
+
+  - offering_key: solink|product|solink ai
+    company: Solink
+    canonical_domain: solink.com
+    canonical_name: Solink AI
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-008]
+    corroborating_source_ids: []
+    observation_contract: Explicitly observed named product.
+
+  - offering_key: solink|product|solink cloud vms
+    company: Solink
+    canonical_domain: solink.com
+    canonical_name: Solink Cloud VMS
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-009]
+    corroborating_source_ids: [t08b-007]
+    observation_contract: Explicitly observed named product; the homepage platform description is umbrella corroboration only.
+
+  - offering_key: solink|product|solink video alarms
+    company: Solink
+    canonical_domain: solink.com
+    canonical_name: Solink Video Alarms
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-010]
+    corroborating_source_ids: []
+    observation_contract: Explicitly observed named product; the corpus treats it as distinct for the tracer bullet.
+
+  - offering_key: assent|product|assent network
+    company: Assent
+    canonical_domain: assent.com
+    canonical_name: Assent Network
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-011]
+    corroborating_source_ids: []
+    observation_contract: Explicitly observed named solution presented as the Company product platform.
+
+  - offering_key: field effect|service|field effect managed detection and response
+    company: Field Effect
+    canonical_domain: fieldeffect.com
+    canonical_name: Field Effect Managed Detection and Response
+    kind: service
+    status: active
+    primary_observation_source_ids: [t08b-013]
+    corroborating_source_ids: [t08b-014, t08b-015]
+    observation_contract: Explicitly observed managed-service presentation; platform detail is corroboration only and does not establish a separate Product in this corpus.
+
+  - offering_key: rewind|product|rewind backups for shopify
+    company: Rewind
+    canonical_domain: rewind.com
+    canonical_name: Rewind Backups for Shopify
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-017]
+    corroborating_source_ids: [t08b-016]
+    observation_contract: Explicitly observed named product; the generic SaaS backup page is corroboration only.
+
+  - offering_key: rewind|product|rewind protection suite
+    company: Rewind
+    canonical_domain: rewind.com
+    canonical_name: Rewind Protection Suite
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-018]
+    corroborating_source_ids: [t08b-016]
+    observation_contract: Explicitly observed named product; the generic SaaS backup page is corroboration only.
+
+  - offering_key: truecontext|product|truecontext field service intelligence platform
+    company: TrueContext
+    canonical_domain: truecontext.com
+    canonical_name: TrueContext Field Service Intelligence Platform
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-022]
+    corroborating_source_ids: [t08b-021]
+    observation_contract: Explicitly observed platform; the broader field-intelligence platform description is corroboration only.
+
+  - offering_key: versaterm|product|versaterm rms
+    company: Versaterm
+    canonical_domain: versaterm.com
+    canonical_name: Versaterm RMS
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-027]
+    corroborating_source_ids: [t08b-026]
+    observation_contract: Explicitly observed named product; the solutions catalog is corroboration only.
+
+  - offering_key: versaterm|product|versaterm cad
+    company: Versaterm
+    canonical_domain: versaterm.com
+    canonical_name: Versaterm CAD
+    kind: product
+    status: active
+    primary_observation_source_ids: [t08b-028]
+    corroborating_source_ids: [t08b-026]
+    observation_contract: Explicitly observed named product; the solutions catalog is corroboration only.
+
+held_or_excluded_records:
+  - source_id: t08b-002
+    disposition: held
+    reason: A dated offering-change candidate requires the separate future change-transition contract; it is not an `offering_observed` fixture input.
+  - source_id: t08b-012
+    disposition: held
+    reason: Assent Native-AI may be a feature rather than a distinct Offering.
+  - source_id: t08b-019
+    disposition: held
+    reason: Klipfolio is outside the approved cohort pending first-party Ottawa evidence.
+  - source_id: t08b-020
+    disposition: held
+    reason: Klipfolio is outside the approved cohort pending first-party Ottawa evidence.
+  - source_id: t08b-023
+    disposition: held
+    reason: N-able is outside the approved cohort pending human browser confirmation and first-party Ottawa evidence.
+  - source_id: t08b-024
+    disposition: held
+    reason: N-able is outside the approved cohort pending human browser confirmation and first-party Ottawa evidence.
+  - source_id: t08b-025
+    disposition: held
+    reason: N-able is outside the approved cohort pending human browser confirmation and first-party Ottawa evidence.
+
+invariants:
+  - Each canonical offering has exactly one company, canonical name, kind, and active status in this controlled corpus.
+  - Each primary observation is a first-party source record from source-manifest.yml.
+  - Corroborating source records enrich provenance and must not produce duplicate canonical offerings.
+  - No record means an offering changed, was discontinued, or has a commercial implication beyond the explicit observed fact.
+  - Entity resolution must preserve existing unknown-company review behavior and must not create canonical Companies from this file.
+  - Any future ingestion must use Ticket 07A offering proposal, audit, approval, and apply controls.

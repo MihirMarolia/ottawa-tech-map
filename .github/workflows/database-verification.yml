@@ -1,0 +1,80 @@
+name: Database verification
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: database-verification-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Clean Supabase verification gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start pinned Supabase stack
+        run: npx --yes supabase@2.109.1 start
+
+      - name: Replay migrations and run pgTAP plus concurrency verification
+        run: npm run db:verify
+
+      - name: Verify anonymous public-read boundary
+        run: |
+          set -euo pipefail
+          db_container="$(docker ps --filter 'name=supabase_db_' --format '{{.Names}}')"
+          test -n "$db_container"
+          result="$(
+            printf '%s\n' "select (
+              not has_table_privilege('anon', 'public.companies', 'select')
+              and has_table_privilege('anon', 'public.public_company_profiles', 'select')
+              and has_table_privilege('anon', 'public.public_company_evidence', 'select')
+              and not has_table_privilege('anon', 'public.offerings', 'select')
+              and has_table_privilege('anon', 'public.public_company_offerings', 'select')
+            );" | docker exec -i "$db_container" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -At
+          )"
+          test "$result" = "t"
+
+      - name: Run durable Supabase integration tests with explicit client boundary
+        run: |
+          set -euo pipefail
+          env_file="$(mktemp)"
+          npx --yes supabase@2.109.1 status -o env > "$env_file"
+          anon_key="$(sed -nE 's/^ANON_KEY="?([^"]+)"?$/\1/p' "$env_file")"
+          service_role_key="$(sed -nE 's/^SERVICE_ROLE_KEY="?([^"]+)"?$/\1/p' "$env_file")"
+          test -n "$anon_key"
+          test -n "$service_role_key"
+          VITE_SUPABASE_URL=http://127.0.0.1:54321 \
+            VITE_SUPABASE_ANON_KEY="$anon_key" \
+            SUPABASE_SERVICE_ROLE_KEY="$service_role_key" \
+            npm test -- src/application-tests/durable-supabase-integration.test.ts
+
+      - name: Run application checks
+        run: npm run check
+
+      - name: Check repository whitespace
+        run: git diff --check
+
+      - name: Stop Supabase stack
+        if: always()
+        run: npx --yes supabase@2.109.1 stop --no-backup
