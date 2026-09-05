@@ -11,6 +11,7 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 - [Signal provenance](docs/domain/signal-provenance.md) — every field traces back to a signal.
 - [Entity resolution](docs/domain/entity-resolution.md) — how we merge and split Entities.
 - [Privacy boundary](docs/domain/privacy-boundary.md) — what we don't collect and how we redact.
+- [Data sourcing policy](docs/domain/data-sourcing-policy.md) — facts vs. compiled/licensed content, ToS boundaries, Discovery Leads.
 - [Scoring](docs/domain/scoring.md) — confidence from signal to proposal to approval.
 
 ## Architecture
