@@ -21,6 +21,9 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 - [Frontend boundary](docs/architecture/frontend-boundary.md) — what the web app may and may not do.
 - [Decisions](docs/architecture/decisions/) — ADRs.
 
+## Design
+- [Visual direction](docs/design/visual-direction.md) — type, color, layout primitives, data-viz rules, and the standing anti-pattern list for the web surface.
+
 ## Features
 - [Durable intelligence persistence](docs/features/durable-intelligence-persistence.md) — Supabase schema, identity, transaction, concurrency, RLS, review, and audit contracts.
 - [Government contract fixture → Company evidence](docs/features/government-contract-fixture-to-company-evidence.md) — first tracer-bullet feature, completed in milestone 0001.
