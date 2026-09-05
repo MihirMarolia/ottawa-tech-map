@@ -54,4 +54,13 @@ describe("Ottawa Company directory", () => {
     });
 
   });
+
+  it("omits the zeroed indicator panel for a Company with no Evidence yet", () => {
+    const company = ottawaDemoDirectory.find((candidate) => candidate.evidence.length === 0) ?? null;
+    expect(company).not.toBeNull();
+    const html = renderDirectoryCompanyProfile(company);
+    expect(html).not.toContain("Current indicators");
+    expect(html).not.toContain("Job postings observed in the last 90 days");
+    expect(html).toContain("No contract or hiring Signals have been added yet");
+  });
 });

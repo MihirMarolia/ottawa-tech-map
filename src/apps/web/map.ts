@@ -48,6 +48,6 @@ export function renderOttawaCompanyMap(companies: ReadonlyArray<DirectoryCompany
       </svg>
     </section>
     <section style="padding-top:32px"><p class="eyebrow">${sorted.length} mapped Companies · shared read projection</p><div class="grid">${list}</div></section>
-  </main>`);
+  </main>`, "map");
 }
 

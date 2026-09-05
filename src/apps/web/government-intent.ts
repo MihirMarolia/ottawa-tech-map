@@ -82,14 +82,14 @@ export function renderGovernmentIntentMonitor(
 ): string {
   const rows = buildGovernmentIntentRows(companies, referenceDate);
   const active = rows.filter((row) => row.category !== "No recent evidence");
-  const cards = rows.map((row) => `<article class="card">
+  const cards = rows.map((row) => `<a class="card" href="/companies/${encodeURIComponent(row.company.slug)}">
     <div class="meta"><span class="badge ${row.category === "No recent evidence" ? "" : "hot"}">${escapeHtml(row.category)}</span>${row.containsFixtureEvidence ? '<span class="badge fixture">Contains fictional fixture</span>' : ""}</div>
-    <h2><a href="/companies/${encodeURIComponent(row.company.slug)}">${escapeHtml(row.company.canonicalName)}</a></h2>
+    <h2>${escapeHtml(row.company.canonicalName)}</h2>
     <p>${row.contractCount} recent contract Signals · ${row.currentHiringCount} current hiring Signals${row.securityClearanceHiring ? " · Security clearance explicitly required" : ""}</p>
     ${row.awardingOrganizations.length ? `<p>Awarding organization: ${escapeHtml(row.awardingOrganizations.join(", "))}</p>` : ""}
     <div class="stat">Latest Evidence ${escapeHtml(row.latestEvidenceDate)}</div>
-  </article>`).join("");
+  </a>`).join("");
   return renderPageLayout("Government Intent Monitor", `<main><section class="hero"><p class="eyebrow">Ottawa Government Intent Monitor</p><h1>Federal-market activity, with the Evidence left visible.</h1><p class="lede">Transparent categories combine contract Evidence from the last 24 months with hiring Evidence from the last 90 days. They are not predictions or opaque scores.</p></section>
   <section class="grid"><div class="panel factlist"><p class="eyebrow">Companies with current indicators</p><h2>${active.length}</h2></div><div class="panel factlist"><p class="eyebrow">Reference date</p><h2>${escapeHtml(referenceDate)}</h2></div></section>
-  <section style="padding-top:32px"><p class="eyebrow">Evidence categories</p><div class="grid">${cards}</div></section></main>`);
+  <section style="padding-top:32px"><p class="eyebrow">Evidence categories</p><div class="grid">${cards}</div></section></main>`, "government-intent");
 }
