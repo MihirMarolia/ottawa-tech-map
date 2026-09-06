@@ -11,6 +11,7 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 - [Signal provenance](docs/domain/signal-provenance.md) — every field traces back to a signal.
 - [Entity resolution](docs/domain/entity-resolution.md) — how we merge and split Entities.
 - [Privacy boundary](docs/domain/privacy-boundary.md) — what we don't collect and how we redact.
+- [Data sourcing policy](docs/domain/data-sourcing-policy.md) — facts vs. compiled/licensed content, ToS boundaries, Discovery Leads.
 - [Scoring](docs/domain/scoring.md) — confidence from signal to proposal to approval.
 
 ## Architecture
@@ -19,6 +20,9 @@ Index for the layered documentation under `docs/`. Read this first, then follow 
 - [Deep modules](docs/architecture/deep-modules.md) — Privacy Gateway, Entity Resolver, Signal Ingestion, Intelligence Scoring, Institutional CSV Import.
 - [Frontend boundary](docs/architecture/frontend-boundary.md) — what the web app may and may not do.
 - [Decisions](docs/architecture/decisions/) — ADRs.
+
+## Design
+- [Visual direction](docs/design/visual-direction.md) — type, color, layout primitives, data-viz rules, and the standing anti-pattern list for the web surface.
 
 ## Features
 - [Durable intelligence persistence](docs/features/durable-intelligence-persistence.md) — Supabase schema, identity, transaction, concurrency, RLS, review, and audit contracts.
