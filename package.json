@@ -28,6 +28,7 @@
     "vitest": "Runs interface contract tests and architecture enforcement tests."
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.112.3"
+    "@supabase/supabase-js": "^2.112.3",
+    "csv-parse": "^6.2.1"
   }
 }

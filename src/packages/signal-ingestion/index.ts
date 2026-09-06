@@ -201,6 +201,18 @@ export interface OfferingProposalService {
 
 export { createOfferingIngestionService } from "./lib/offering-ingestion.js";
 export {
+  CANADABUYS_AWARD_NOTICE_RESOURCE_URL,
+  CANADABUYS_DRY_RUN_RANGE_HEADER,
+  CANADABUYS_DRY_RUN_REQUEST_HEADERS,
+  createCanadaBuysDryRunReport,
+  fetchCanadaBuysDryRunReport,
+  normalizeCanadaBuysAwardNotice,
+  persistCanadaBuysReviewCandidate,
+  type CanadaBuysDryRunCandidate,
+  type CanadaBuysDryRunReport,
+  type CanadaBuysReviewCandidate,
+} from "./lib/canadabuys-award-notice-dry-run.js";
+export {
   prepareOfferingObservationFixture,
   type FixtureOfferingClassification,
   type OfferingObservationFixture,
